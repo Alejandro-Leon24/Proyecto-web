@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (page === "index.html") {
         const spanMateria = document.getElementById("nombre-materia");
+        const mensajeElement = document.querySelector("p");
         const form = document.getElementById("form-asistencia");
 
         const ahora = new Date();
@@ -116,20 +117,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const yaRegistrada = asistencias.some(a => {
                 const fecha = new Date(a.fecha);
-                return (
-                    a.materia === materiaActual.nombre &&
-                    fecha.toDateString() === ahora.toDateString()
-                );
+                return a.materiaId === materiaActual.id &&
+                    fecha.toDateString() === ahora.toDateString();
             });
 
             if (yaRegistrada) {
-                document.querySelector("p").textContent = `Ya registraste asistencia para la clase de ${materiaActual.nombre}.`;
+                let mensajeYaRegistrada = `Ya registraste asistencia para la clase de ${materiaActual.nombre}. `;
+
+                // Buscar la siguiente clase
+                const siguientes = materias
+                    .filter(m =>
+                        m.dias.includes(diaActual) &&
+                        convertirAHorasDecimal(m.hora_inicio) > horaActual
+                    )
+                    .sort((a, b) => convertirAHorasDecimal(a.hora_inicio) - convertirAHorasDecimal(b.hora_inicio));
+
+                if (siguientes.length > 0) {
+                    const siguiente = siguientes[0];
+                    const mins = Math.round((convertirAHorasDecimal(siguiente.hora_inicio) - horaActual) * 60);
+                    const horas = Math.floor(mins / 60);
+                    const minutos = mins % 60;
+                    mensajeYaRegistrada += `Tu siguiente clase, ${siguiente.nombre}, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
+                } else {
+                    mensajeYaRegistrada += `No tienes más clases pendientes por hoy.`;
+                }
+
+                mensajeElement.textContent = mensajeYaRegistrada;
+                form.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    mostrarMensajePersonalizado(mensajeYaRegistrada);
+                });
                 return;
             }
 
         } else {
             spanMateria.textContent = "______";
-            document.querySelector("p").textContent = "No tienes clase en esta hora.";
+            mensajeElement.textContent = "No tienes clase en esta hora.";
             form.addEventListener("submit", (e) => {
                 e.preventDefault();
                 mostrarMensajePersonalizado("No puedes registrar asistencia si no tienes clase ahora.");
@@ -149,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const yaRegistrada = asistencias.some(a => {
                 const fecha = new Date(a.fecha);
                 return (
-                    a.materia === materiaActual.nombre &&
+                    a.materiaNombre === materiaActual.nombre &&
                     fecha.toDateString() === ahora.toDateString()
                 );
             });
@@ -189,12 +212,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     const mins = Math.round((convertirAHorasDecimal(siguiente.hora_inicio) - horaActual) * 60);
                     const horas = Math.floor(mins / 60);
                     const minutos = mins % 60;
-                    mensaje += `Tu siguiente clase comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
+                    mensaje += `Tu siguiente clase, ${siguiente.nombre}, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
                 } else {
                     mensaje += `No tienes más clases pendientes por hoy.`;
                 }
 
-                document.querySelector("p").textContent = mensaje;
+                mensajeElement.textContent = mensaje;
                 spanMateria.textContent = materiaActual.nombre;
             }, 300); // Pequeña espera para que se cierre el modal primero
         });
@@ -222,8 +245,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const resumen = {};
             asistencias.forEach(a => {
                 if (a.asistio === "si") {
-                    if (!resumen[a.materia]) resumen[a.materia] = 0;
-                    resumen[a.materia]++;
+                    if (!resumen[a.materiaNombre]) resumen[a.materiaNombre] = 0;
+                    resumen[a.materiaNombre]++;
                 }
             });
 
@@ -291,13 +314,23 @@ document.addEventListener("DOMContentLoaded", () => {
         function llenarComboSemanas(mesSeleccionado, anio = new Date().getFullYear()) {
             comboSemana.innerHTML = "";
             const primerDiaMes = new Date(anio, mesSeleccionado, 1);
+            let diaSemana = primerDiaMes.getDay();  // 0 (domingo) - 6 (sábado)
+            let ajuste = 0;
+
+            if (diaSemana !== 1) { // Si no es lunes
+                ajuste = (diaSemana === 0 ? -6 : 1 - diaSemana); // Ajuste para llegar al lunes anterior
+            }
+
+            let inicioSemana = new Date(primerDiaMes.getFullYear(), primerDiaMes.getMonth(), primerDiaMes.getDate() + ajuste);
             const ultimoDiaMes = new Date(anio, mesSeleccionado + 1, 0);
-            let inicioSemana = new Date(primerDiaMes);
 
             while (inicioSemana <= ultimoDiaMes) {
-                let finSemana = new Date(inicioSemana);
-                finSemana.setDate(finSemana.getDate() + 6);
-                if (finSemana > ultimoDiaMes) finSemana = new Date(ultimoDiaMes);
+                let finSemana = new Date(inicioSemana.getFullYear(), inicioSemana.getMonth(), inicioSemana.getDate());
+                finSemana.setDate(inicioSemana.getDate() + 6);
+
+                if (finSemana > ultimoDiaMes) {
+                    finSemana = new Date(ultimoDiaMes.getFullYear(), ultimoDiaMes.getMonth(), ultimoDiaMes.getDate());
+                }
 
                 const option = document.createElement("option");
                 option.value = `${inicioSemana.getDate()}-${finSemana.getDate()}`;
@@ -308,12 +341,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        function filtrarAsistenciasPorSemana(mes, rangoDias) {
+        function filtrarAsistenciasPorSemana(mes, rangoDias, anio) {
             const asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
             const [diaInicio, diaFin] = rangoDias.split("-").map(Number);
             return asistencias.filter(a => {
                 const fecha = new Date(a.fecha);
                 return fecha.getMonth() === mes &&
+                    fecha.getFullYear() === anio &&
                     fecha.getDate() >= diaInicio &&
                     fecha.getDate() <= diaFin;
             });
@@ -327,10 +361,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             asistenciasFiltradas.forEach(a => {
                 const fecha = new Date(a.fecha);
-                const dia = diasSemana[fecha.getDay() - 1];
-                if (!materiasAgrupadas[a.materia]) materiasAgrupadas[a.materia] = {};
+                const dia = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"][fecha.getDay()];
+                if (!materiasAgrupadas[a.materiaNombre]) materiasAgrupadas[a.materiaNombre] = {};
                 const hora = fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                materiasAgrupadas[a.materia][dia] = {
+                materiasAgrupadas[a.materiaNombre][dia] = {
                     fecha: fecha.toLocaleDateString(),
                     hora,
                     icono: a.asistio === "si" ? "✔" : "✘"
@@ -356,17 +390,19 @@ document.addEventListener("DOMContentLoaded", () => {
         // Inicializar combos
         llenarComboMeses();
         const mesActual = new Date().getMonth();
-        llenarComboSemanas(mesActual);
+        const anioActual = new Date().getFullYear();
+        llenarComboSemanas(mesActual, anioActual);
 
         comboMes.value = mesActual;
         comboMes.addEventListener("change", (e) => {
-            llenarComboSemanas(parseInt(e.target.value));
+            llenarComboSemanas(parseInt(e.target.value), anioActual);
         });
 
         btnBuscar.addEventListener("click", () => {
             const mes = parseInt(comboMes.value);
             const semana = comboSemana.value;
-            const filtradas = filtrarAsistenciasPorSemana(mes, semana);
+            const anio = new Date().getFullYear();
+            const filtradas = filtrarAsistenciasPorSemana(mes, semana, anio);
             mostrarAsistenciasFiltradas(filtradas);
         });
 
@@ -383,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         comboSemana.value = semanaDefault;
-        const filtradas = filtrarAsistenciasPorSemana(mesActual, semanaDefault);
+        const filtradas = filtrarAsistenciasPorSemana(mesActual, semanaDefault, anioActual);
         mostrarAsistenciasFiltradas(filtradas);
     }
 
@@ -391,9 +427,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (page === "editar_materias.html") {
         const container = document.querySelector("main");
         const tmpl = document.getElementById("editar-materias");
+        if (!tmpl) {
+            console.error("El template 'editar-materias' no se encontró en el DOM.");
+            return;
+        }
         const clone = tmpl.content.cloneNode(true);
-        container.innerHTML = ""; // Limpia el main
+        container.innerHTML = "";
         container.appendChild(clone);
+
+        console.log(container.innerHTML); // Debería mostrar el contenido del template
+
+        // Asegúrate de que el formulario y el botón cancelar estén presentes en el DOM
+        const form = document.getElementById("form-materia");
+        const btnCancelar = document.getElementById("cancelar-edicion");
+
+        console.log("Template encontrado:", tmpl); // Verifica si el template se encuentra
+        console.log("Contenido clonado:", clone); // Verifica si el contenido del template se clonó correctamente
+        console.log("Contenedor antes de inyectar:", container.innerHTML); // Verifica el estado del contenedor antes de inyectar
+
         // Utilidad para IDs únicos
         function generarIdUnico() {
             return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
@@ -405,8 +456,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let materias = JSON.parse(localStorage.getItem("materias")) || [];
         let editandoId = null;
         const tabla = document.getElementById("tabla-materias").querySelector("tbody");
-        const form = document.getElementById("form-materia");
-        const btnCancelar = document.getElementById("cancelar-edicion");
 
         function renderMaterias() {
             tabla.innerHTML = "";

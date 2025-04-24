@@ -1,4 +1,4 @@
-const CACHE_NAME = "asistencia-cache-v6";
+const CACHE_NAME = "asistencia-cache-v2";
 const urlsToCache = [
   "./",
   "./index.html",
@@ -31,14 +31,13 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request).then(response =>
-      response ||
-      fetch(event.request).then(fetchRes =>
-        caches.open(CACHE_NAME).then(cache => {
+    fetch(event.request)
+      .then(fetchRes => {
+        return caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, fetchRes.clone());
           return fetchRes;
-        })
-      )
-    )
+        });
+      })
+      .catch(() => caches.match(event.request)) // Si falla la red, usa el caché
   );
 });

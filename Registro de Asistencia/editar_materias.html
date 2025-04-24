@@ -27,16 +27,16 @@
   <template id="editar-materias">
     <h1>Editar materias</h1>
     <div class="contenedor-editar-materias">
-
       <!-- Tabla a la izquierda -->
-      <div style="flex: 1; display: flex; justify-content: center; min-width: 300px; margin-left: 10px;">
-        <table border="1" id="tabla-materias" style="width: 100%;">
+      <div class="contenedor-tabla">
+        <table border="1" id="tabla-materias">
           <thead>
             <tr>
               <th>Materia</th>
               <th>Días</th>
               <th>Hora</th>
               <th>Profesor</th>
+              <th>Eliminar</th>
             </tr>
           </thead>
           <tbody>
@@ -44,15 +44,14 @@
           </tbody>
         </table>
       </div>
-
       <!-- Formulario a la derecha -->
-      <div style="flex: 1; display: flex; justify-content: center; min-width: 300px; margin-right: 10px;">
-        <form id="form-materia" style="width: 100%; max-width: 400px;">
-          <label style="display: block; margin-bottom: 5px;">Nombre de la materia:<br>
-            <input type="text" name="materia" required style="width: 100%; padding: 8px;">
+      <div class="contenedor-formulario">
+        <form id="form-materia">
+          <label>Nombre de la materia:<br>
+            <input type="text" name="materia" required>
           </label>
-          <label style="display: block; margin-bottom: 5px;">Días de asistencia:<br>
-            <select name="dias" multiple size="3" required style="width: 100%; padding: 8px;">
+          <label>Días de asistencia:<br>
+            <select name="dias" multiple size="3" required>
               <option value="lunes">Lunes</option>
               <option value="martes">Martes</option>
               <option value="miercoles">Miércoles</option>
@@ -63,19 +62,19 @@
             </select>
             <small>Ctrl+clic o toque prolongado para seleccionar varios días.</small>
           </label>
-          <label style="display: block; margin-bottom: 5px;">Hora de inicio:<br>
-            <input type="time" name="hora_inicio" required style="width: 100%; padding: 8px;">
+          <label>Hora de inicio:<br>
+            <input type="time" name="hora_inicio" required>
           </label>
-          <label style="display: block; margin-bottom: 5px;">Hora de fin:<br>
-            <input type="time" name="hora_fin" required style="width: 100%; padding: 8px;">
+          <label>Hora de fin:<br>
+            <input type="time" name="hora_fin" required>
           </label>
-          <label style="display: block; margin-bottom: 5px;">Profesor:<br>
-            <input type="text" name="profesor" required style="width: 100%; padding: 8px;">
+          <label>Profesor:<br>
+            <input type="text" name="profesor" required>
           </label>
-          <button type="submit" style="align-self: center; margin-top: 10px;">Confirmar</button>
+          <button type="submit">Confirmar</button>
+          <button type="button" id="cancelar-edicion">Cancelar</button>
         </form>
       </div>
-
     </div>
   </template>
 

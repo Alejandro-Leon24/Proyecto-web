@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistencia</title>
+    <link rel="stylesheet" href="CSS/estilos.css">
+</head>
+
+<body>
+    <!-- Menú hamburguesa -->
+    <nav>
+        <div id="menu-btn">&#9776;</div>
+        <ul id="menu-desplegable" style="display: none;">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="editar_materias.html">Editar</a></li>
+            <li><a href="asistencias.html">Asistencias</a></li>
+            <li><a href="resumen.html">Resumen</a></li>
+        </ul>
+    </nav>
+
+    <main></main>
+
+    <!-- Página: asistencias.html -->
+    
+
+
+    <!-- Plantilla para tabla de asistencias -->
+    <template id="tabla-asistencias">
+        <div class="barra-filtros">
+            <label for="mes-select">Mes:</label>
+            <select id="mes-select"></select>
+    
+            <label for="semana-select">Semana:</label>
+            <select id="semana-select"></select>
+    
+            <button id="buscar-asistencia">Buscar</button>
+        </div>
+        
+        <h1 style="text-align:center">Tabla de asistencias</h1>
+        <table border="1" style="margin: 0 auto; width: 100%; max-width: 800px;">
+            <thead>
+                <tr>
+                    <th>Materia</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sábado</th>
+                    <th>Domingo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filas dinámicas -->
+            </tbody>
+        </table>
+    </template>
+
+    <script src="JS/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Asistencia</title>
+  <link rel="stylesheet" href="CSS/estilos.css">
+</head>
+
+<body>
+  <!-- Menú hamburguesa -->
+  <nav>
+    <div id="menu-btn">&#9776;</div>
+    <ul id="menu-desplegable" style="display: none;">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="editar_materias.html">Editar</a></li>
+      <li><a href="asistencias.html">Asistencias</a></li>
+      <li><a href="resumen.html">Resumen</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenedor principal donde inyectamos contenido -->
+  <main></main>
+  <!-- Página: resumen.html -->
+  <template id="resumen-asistencia">
+    <h1>Resumen de asistencia</h1>
+    <table border="1">
+      <thead>
+        <tr id="encabezado-resumen">
+          <!-- Encabezado dinámico -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="totales-resumen">
+          <!-- Totales por materia -->
+        </tr>
+      </tbody>
+    </table>
+    <p id="reporte-asistencia">Aquí aparecerá si falta en alguna materia o si está todo completo.</p>
+  </template>
+
+  <script src="JS/script.js"></script>
+</body>
+
+</html>

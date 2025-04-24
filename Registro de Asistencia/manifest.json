@@ -1,0 +1,16 @@
+{
+    "name": "Asistente de Asistencia",
+    "short_name": "AsistenciaApp",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#f5f5f5",
+    "theme_color": "#aac4b2",
+    "icons": [
+      {
+        "src": "IMG/icono.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      }
+    ]
+  }
+  

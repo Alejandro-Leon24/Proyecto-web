@@ -254,3 +254,25 @@ td, th {
 .barra-filtros button:hover {
   background-color: #8da897;
 }
+
+.contenedor-editar-materias {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .contenedor-editar-materias {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contenedor-editar-materias > div {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+}
+

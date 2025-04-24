@@ -161,7 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Guardar asistencia
             asistencias.push({
-                materia: materiaActual.nombre,
+                materiaId: materiaActual.id,
+                materiaNombre: materiaActual.nombre, // Para mostrar
                 fecha: new Date().toISOString(),
                 asistio: seleccion.value
             });
@@ -476,6 +477,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Editar
                 const idx = materias.findIndex(m => m.id === editandoId);
                 materias[idx] = { id: editandoId, nombre, dias, hora_inicio, hora_fin, profesor };
+                // Actualiza nombre en asistencias
+                let asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
+                asistencias = asistencias.map(a => {
+                    if (a.materiaId === editandoId) {
+                        return { ...a, materiaNombre: nombre };
+                    }
+                    return a;
+                });
+                localStorage.setItem("asistencias", JSON.stringify(asistencias));
                 editandoId = null;
             } else {
                 // Nuevo

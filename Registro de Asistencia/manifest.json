@@ -1,6 +1,6 @@
 {
     "name": "Asistente de Asistencia",
-    "short_name": "AsistenciaApp",
+    "short_name": "Asistencia",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#f5f5f5",

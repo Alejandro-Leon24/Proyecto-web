@@ -269,135 +269,159 @@ document.addEventListener("DOMContentLoaded", () => {
         const clone = template.content.cloneNode(true);
         container.innerHTML = "";
         container.appendChild(clone);
-      
+
         // Ahora que el contenido está en el DOM, ya existen los elementos
         const comboMes = document.getElementById("combo-mes");
         const comboSemana = document.getElementById("combo-semana");
         const btnBuscar = document.getElementById("btn-buscar");
-      
-        const meses = ["enero", "febrero", "marzo","abril","mayo","Junio","Julio","agosto", "septiembre","octubre","noviembre", "diciembre"];
-      
+
+        const meses = ["enero", "febrero", "marzo", "abril", "mayo", "Junio", "Julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
         function llenarComboMeses() {
-          comboMes.innerHTML = "";
-          meses.forEach((mes, i) => {
-            const option = document.createElement("option");
-            option.value = i;
-            option.textContent = mes.charAt(0).toUpperCase() + mes.slice(1);
-            comboMes.appendChild(option);
-          });
-        }
-      
-        function llenarComboSemanas(mesSeleccionado, anio = new Date().getFullYear()) {
-          comboSemana.innerHTML = "";
-          const primerDiaMes = new Date(anio, mesSeleccionado, 1);
-          const ultimoDiaMes = new Date(anio, mesSeleccionado + 1, 0);
-          let inicioSemana = new Date(primerDiaMes);
-      
-          while (inicioSemana <= ultimoDiaMes) {
-            let finSemana = new Date(inicioSemana);
-            finSemana.setDate(finSemana.getDate() + 6);
-            if (finSemana > ultimoDiaMes) finSemana = new Date(ultimoDiaMes);
-      
-            const option = document.createElement("option");
-            option.value = `${inicioSemana.getDate()}-${finSemana.getDate()}`;
-            option.textContent = `${inicioSemana.getDate()} al ${finSemana.getDate()}`;
-            comboSemana.appendChild(option);
-      
-            inicioSemana.setDate(inicioSemana.getDate() + 7);
-          }
-        }
-      
-        function filtrarAsistenciasPorSemana(mes, rangoDias) {
-          const asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
-          const [diaInicio, diaFin] = rangoDias.split("-").map(Number);
-          return asistencias.filter(a => {
-            const fecha = new Date(a.fecha);
-            return fecha.getMonth() === mes &&
-              fecha.getDate() >= diaInicio &&
-              fecha.getDate() <= diaFin;
-          });
-        }
-      
-        function mostrarAsistenciasFiltradas(asistenciasFiltradas) {
-          const tbody = container.querySelector("tbody");
-          tbody.innerHTML = "";
-          const diasSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
-          const materiasAgrupadas = {};
-      
-          asistenciasFiltradas.forEach(a => {
-            const fecha = new Date(a.fecha);
-            const dia = diasSemana[fecha.getDay() - 1];
-            if (!materiasAgrupadas[a.materia]) materiasAgrupadas[a.materia] = {};
-            const hora = fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            materiasAgrupadas[a.materia][dia] = {
-              fecha: fecha.toLocaleDateString(),
-              hora,
-              icono: a.asistio === "si" ? "✔" : "✘"
-            };
-          });
-      
-          Object.keys(materiasAgrupadas).forEach(nombre => {
-            const fila = document.createElement("tr");
-            const tdMateria = document.createElement("td");
-            tdMateria.innerHTML = `<strong>${nombre}</strong>`;
-            fila.appendChild(tdMateria);
-      
-            diasSemana.forEach(dia => {
-              const td = document.createElement("td");
-              const data = materiasAgrupadas[nombre][dia];
-              td.innerHTML = data ? `${data.icono}<br><small>${data.fecha}</small><br><small>${data.hora}</small>` : "-";
-              fila.appendChild(td);
+            comboMes.innerHTML = "";
+            meses.forEach((mes, i) => {
+                const option = document.createElement("option");
+                option.value = i;
+                option.textContent = mes.charAt(0).toUpperCase() + mes.slice(1);
+                comboMes.appendChild(option);
             });
-            tbody.appendChild(fila);
-          });
         }
-      
+
+        function llenarComboSemanas(mesSeleccionado, anio = new Date().getFullYear()) {
+            comboSemana.innerHTML = "";
+            const primerDiaMes = new Date(anio, mesSeleccionado, 1);
+            const ultimoDiaMes = new Date(anio, mesSeleccionado + 1, 0);
+            let inicioSemana = new Date(primerDiaMes);
+
+            while (inicioSemana <= ultimoDiaMes) {
+                let finSemana = new Date(inicioSemana);
+                finSemana.setDate(finSemana.getDate() + 6);
+                if (finSemana > ultimoDiaMes) finSemana = new Date(ultimoDiaMes);
+
+                const option = document.createElement("option");
+                option.value = `${inicioSemana.getDate()}-${finSemana.getDate()}`;
+                option.textContent = `${inicioSemana.getDate()} al ${finSemana.getDate()}`;
+                comboSemana.appendChild(option);
+
+                inicioSemana.setDate(inicioSemana.getDate() + 7);
+            }
+        }
+
+        function filtrarAsistenciasPorSemana(mes, rangoDias) {
+            const asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
+            const [diaInicio, diaFin] = rangoDias.split("-").map(Number);
+            return asistencias.filter(a => {
+                const fecha = new Date(a.fecha);
+                return fecha.getMonth() === mes &&
+                    fecha.getDate() >= diaInicio &&
+                    fecha.getDate() <= diaFin;
+            });
+        }
+
+        function mostrarAsistenciasFiltradas(asistenciasFiltradas) {
+            const tbody = container.querySelector("tbody");
+            tbody.innerHTML = "";
+            const diasSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+            const materiasAgrupadas = {};
+
+            asistenciasFiltradas.forEach(a => {
+                const fecha = new Date(a.fecha);
+                const dia = diasSemana[fecha.getDay() - 1];
+                if (!materiasAgrupadas[a.materia]) materiasAgrupadas[a.materia] = {};
+                const hora = fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                materiasAgrupadas[a.materia][dia] = {
+                    fecha: fecha.toLocaleDateString(),
+                    hora,
+                    icono: a.asistio === "si" ? "✔" : "✘"
+                };
+            });
+
+            Object.keys(materiasAgrupadas).forEach(nombre => {
+                const fila = document.createElement("tr");
+                const tdMateria = document.createElement("td");
+                tdMateria.innerHTML = `<strong>${nombre}</strong>`;
+                fila.appendChild(tdMateria);
+
+                diasSemana.forEach(dia => {
+                    const td = document.createElement("td");
+                    const data = materiasAgrupadas[nombre][dia];
+                    td.innerHTML = data ? `${data.icono}<br><small>${data.fecha}</small><br><small>${data.hora}</small>` : "-";
+                    fila.appendChild(td);
+                });
+                tbody.appendChild(fila);
+            });
+        }
+
         // Inicializar combos
         llenarComboMeses();
         const mesActual = new Date().getMonth();
         llenarComboSemanas(mesActual);
-      
+
         comboMes.value = mesActual;
         comboMes.addEventListener("change", (e) => {
-          llenarComboSemanas(parseInt(e.target.value));
+            llenarComboSemanas(parseInt(e.target.value));
         });
-      
+
         btnBuscar.addEventListener("click", () => {
-          const mes = parseInt(comboMes.value);
-          const semana = comboSemana.value;
-          const filtradas = filtrarAsistenciasPorSemana(mes, semana);
-          mostrarAsistenciasFiltradas(filtradas);
+            const mes = parseInt(comboMes.value);
+            const semana = comboSemana.value;
+            const filtradas = filtrarAsistenciasPorSemana(mes, semana);
+            mostrarAsistenciasFiltradas(filtradas);
         });
-      
+
         // Mostrar semana actual
         const fechaHoy = new Date();
         const dia = fechaHoy.getDate();
         const opciones = comboSemana.options;
         let semanaDefault = opciones[0]?.value || "";
         for (let opt of opciones) {
-          const [inicio, fin] = opt.value.split("-").map(Number);
-          if (dia >= inicio && dia <= fin) {
-            semanaDefault = opt.value;
-            break;
-          }
+            const [inicio, fin] = opt.value.split("-").map(Number);
+            if (dia >= inicio && dia <= fin) {
+                semanaDefault = opt.value;
+                break;
+            }
         }
         comboSemana.value = semanaDefault;
         const filtradas = filtrarAsistenciasPorSemana(mesActual, semanaDefault);
         mostrarAsistenciasFiltradas(filtradas);
-      }
+    }
 
 
     if (page === "editar_materias.html") {
-        console.log("Materias cargadas:", materias);
+        const container = document.querySelector("main");
+        const tmpl = document.getElementById("editar-materias");
+        const clone = tmpl.content.cloneNode(true);
+        container.innerHTML = ""; // Limpia el main
+        container.appendChild(clone);
+        // Utilidad para IDs únicos
+        function generarIdUnico() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        }
+        function horariosSeSolapan(h1_ini, h1_fin, h2_ini, h2_fin) {
+            return (h1_ini < h2_fin && h1_fin > h2_ini);
+        }
+
+        let materias = JSON.parse(localStorage.getItem("materias")) || [];
+        let editandoId = null;
         const tabla = document.getElementById("tabla-materias").querySelector("tbody");
         const form = document.getElementById("form-materia");
+        const btnCancelar = document.getElementById("cancelar-edicion");
 
         function renderMaterias() {
             tabla.innerHTML = "";
-            materias.forEach((m, i) => {
+            materias.forEach(m => {
                 const fila = document.createElement("tr");
-                fila.innerHTML = `<td>${m.nombre}</td><td>${m.dias.join(", ")}</td><td>${m.hora_inicio} - ${m.hora_fin}</td><td>${m.profesor}</td>`;
-                fila.addEventListener("click", () => {
+                fila.innerHTML = `
+                    <td>${m.nombre}</td>
+                    <td>${m.dias.join(", ")}</td>
+                    <td>${m.hora_inicio} - ${m.hora_fin}</td>
+                    <td>${m.profesor}</td>
+                    <td>
+                        <button class="eliminar" title="Eliminar materia" style="color:red;font-weight:bold;">&#x2716;</button>
+                    </td>
+                `;
+                fila.addEventListener("click", (e) => {
+                    if (e.target.classList.contains("eliminar")) return; // No editar si es para eliminar
                     form.materia.value = m.nombre;
                     [...form.dias.options].forEach(opt => {
                         opt.selected = m.dias.includes(opt.value);
@@ -405,36 +429,64 @@ document.addEventListener("DOMContentLoaded", () => {
                     form.hora_inicio.value = m.hora_inicio;
                     form.hora_fin.value = m.hora_fin;
                     form.profesor.value = m.profesor;
+                    editandoId = m.id;
+                });
+                fila.querySelector(".eliminar").addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (confirm(`¿Seguro que quieres borrar "${m.nombre}" (${m.hora_inicio}-${m.hora_fin})?`)) {
+                        materias = materias.filter(mat => mat.id !== m.id);
+                        localStorage.setItem("materias", JSON.stringify(materias));
+                        renderMaterias();
+                    }
                 });
                 tabla.appendChild(fila);
             });
         }
 
-        renderMaterias();
+        // Botón cancelar de edición
+        if (btnCancelar) {
+            btnCancelar.addEventListener("click", () => {
+                form.reset();
+                editandoId = null;
+            });
+        }
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
-            const nombre = form.materia.value;
+            const nombre = form.materia.value.trim();
             const dias = Array.from(form.dias.selectedOptions).map(opt => opt.value);
             const hora_inicio = form.hora_inicio.value;
             const hora_fin = form.hora_fin.value;
-            const profesor = form.profesor.value;
+            const profesor = form.profesor.value.trim();
 
-            const nuevaMateria = {
-                nombre: nombre.trim(),
-                dias: dias.map(d => d.toLowerCase()), // Asegúrate de que los días estén en minúsculas
-                hora_inicio: hora_inicio.trim(),
-                hora_fin: hora_fin.trim(),
-                profesor: profesor.trim()
-            };
-            const index = materias.findIndex(m => m.nombre === nombre);
-            if (index !== -1) materias[index] = nuevaMateria;
-            else materias.push(nuevaMateria);
+            // Validación de solapamiento
+            for (let dia of dias) {
+                let conflicto = materias.find(m =>
+                    m.id !== editandoId &&
+                    m.dias.includes(dia) &&
+                    horariosSeSolapan(hora_inicio, hora_fin, m.hora_inicio, m.hora_fin)
+                );
+                if (conflicto) {
+                    mostrarMensajePersonalizado(`Ya tienes una materia "<b>${conflicto.nombre}</b>" (${conflicto.hora_inicio} - ${conflicto.hora_fin}) ese día`);
+                    return;
+                }
+            }
 
+            if (editandoId) {
+                // Editar
+                const idx = materias.findIndex(m => m.id === editandoId);
+                materias[idx] = { id: editandoId, nombre, dias, hora_inicio, hora_fin, profesor };
+                editandoId = null;
+            } else {
+                // Nuevo
+                materias.push({ id: generarIdUnico(), nombre, dias, hora_inicio, hora_fin, profesor });
+            }
             localStorage.setItem("materias", JSON.stringify(materias));
             mostrarMensajePersonalizado("Materia guardada correctamente");
             renderMaterias();
             form.reset();
         });
+
+        renderMaterias();
     }
 });

@@ -29,13 +29,13 @@
     <!-- Plantilla para tabla de asistencias -->
     <template id="tabla-asistencias">
         <div class="barra-filtros">
-            <label for="mes-select">Mes:</label>
-            <select id="mes-select"></select>
+            <label for="mes-select"><b>Mes:</b></label>
+            <select id="combo-mes"></select>
     
-            <label for="semana-select">Semana:</label>
-            <select id="semana-select"></select>
+            <label for="semana-select"><b>Semana:</b></label>
+            <select id="combo-semana"></select>
     
-            <button id="buscar-asistencia">Buscar</button>
+            <button id="btn-buscar">Buscar</button>
         </div>
         
         <h1 style="text-align:center">Tabla de asistencias</h1>
@@ -59,6 +59,7 @@
     </template>
 
     <script src="JS/script.js"></script>
+    <script src="JS/update-sw.js"></script>
 </body>
 
 </html>

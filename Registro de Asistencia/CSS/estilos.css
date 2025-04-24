@@ -139,6 +139,21 @@ td, th {
   justify-content: center;
   display: flex;
 }
+/* Solo aplica a los botones dentro del formulario de editar materias del template */
+#editar-materias .contenedor-formulario button#cancelar-edicion {
+  background-color: #ffcccc !important;   /* Rojo pálido */
+  color: #a94442 !important;              /* Rojo más oscuro para el texto */
+  border: none;
+  border-radius: 10px;
+  margin-left: 10px;
+  font-size: 1.1rem;
+  transition: background-color 0.3s;
+}
+
+#editar-materias .contenedor-formulario button#cancelar-edicion:hover {
+  background-color: #ff5c5c !important;   /* Rojo más encendido */
+  color: #fff !important;
+}
 /* Mensaje temporal para resumen */
 #mensaje-resumen-vacio {
   font-size: 1.2rem;
@@ -257,22 +272,20 @@ td, th {
 
 .contenedor-editar-materias {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;      /* Cambia de row-reverse a row */
   justify-content: space-between;
   align-items: flex-start;
   gap: 40px;
   flex-wrap: wrap;
+  
 }
-
 @media (max-width: 768px) {
   .contenedor-editar-materias {
     flex-direction: column;
     align-items: center;
   }
-
   .contenedor-editar-materias > div {
     width: 100% !important;
     margin: 0 !important;
   }
 }
-

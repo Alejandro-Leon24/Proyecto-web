@@ -1,3 +1,5 @@
+// Este archivo se encarga de registrar el service worker y de actualizarlo si hay una nueva versión disponible.
+// Se registra el service worker y se comprueba si hay una nueva versión disponible y te notifica si la hay.
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js").then(reg => {
       reg.onupdatefound = () => {

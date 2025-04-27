@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+    
     // Activar menú desplegable
     const menuBtn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu-desplegable");
 
+    // Verificar si los elementos existen antes de agregar el evento
     if (menuBtn && menu) {
         menuBtn.addEventListener("click", () => {
             menu.style.display = menu.style.display === "block" ? "none" : "block";
@@ -19,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "resumen.html": "resumen-asistencia"
     };
 
+    // Cargar el template correspondiente al main
     const container = document.querySelector("main");
     if (templates[page]) {
         const tpl = document.getElementById(templates[page]);
@@ -29,6 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Registrar Service Worker si existe
+    // Verificar si el navegador soporta Service Workers
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
             .then(() => console.log("Service Worker registrado"))
@@ -52,14 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // FUNCIONALIDAD DE TABLAS DE ASISTENCIA Y RESUMEN SE PROGRAMARÁ EN SIGUIENTE PASO
-
-    if (menuBtn && menu) {
-        menuBtn.addEventListener("click", () => {
-            menu.classList.toggle("show");
-        });
-    }
-
+    // Función para mostrar mensajes personalizados
+    // y cerrar el modal al hacer clic en "Aceptar"
     function mostrarMensajePersonalizado(mensaje) {
         let modal = document.createElement("div");
         modal.id = "modal-mensaje";
@@ -77,11 +76,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Verificar si hay materias registradas
+    // y mostrar un mensaje si no hay materias registradas
     const materias = JSON.parse(localStorage.getItem("materias")) || [];
     if (materias.length === 0 && page !== "editar_materias.html") {
         mostrarMensajePersonalizado("Todavía no tienes materias registradas. Ve a 'Editar' para agregarlas.");
     }
 
+    // Si estamos en la página de asistencia, cargar la materia actual
     if (page === "index.html") {
         const spanMateria = document.getElementById("nombre-materia");
         const mensajeElement = document.querySelector("p");
@@ -427,23 +429,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (page === "editar_materias.html") {
         const container = document.querySelector("main");
         const tmpl = document.getElementById("editar-materias");
-        if (!tmpl) {
-            console.error("El template 'editar-materias' no se encontró en el DOM.");
-            return;
-        }
+
+        // Limpiar el contenedor antes de agregar el nuevo contenido
         const clone = tmpl.content.cloneNode(true);
         container.innerHTML = "";
         container.appendChild(clone);
 
-        console.log(container.innerHTML); // Debería mostrar el contenido del template
-
         // Asegúrate de que el formulario y el botón cancelar estén presentes en el DOM
         const form = document.getElementById("form-materia");
         const btnCancelar = document.getElementById("cancelar-edicion");
-
-        console.log("Template encontrado:", tmpl); // Verifica si el template se encuentra
-        console.log("Contenido clonado:", clone); // Verifica si el contenido del template se clonó correctamente
-        console.log("Contenedor antes de inyectar:", container.innerHTML); // Verifica el estado del contenedor antes de inyectar
 
         // Utilidad para IDs únicos
         function generarIdUnico() {

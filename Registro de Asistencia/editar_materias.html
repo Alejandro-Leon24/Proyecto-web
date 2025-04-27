@@ -12,7 +12,7 @@
   <!-- Menú hamburguesa -->
   <nav>
     <div id="menu-btn">&#9776;</div>
-    <ul id="menu-desplegable" style="display: none;">
+    <ul id="menu-desplegable">
       <li><a href="index.html">Inicio</a></li>
       <li><a href="editar_materias.html">Editar</a></li>
       <li><a href="asistencias.html">Asistencias</a></li>
@@ -27,7 +27,7 @@
   <template id="editar-materias">
     <h1>Editar materias</h1>
     <div class="contenedor-editar-materias">
-      <!-- Tabla a la izquierda -->
+      <!-- Tabla -->
       <div class="contenedor-tabla">
         <table border="1" id="tabla-materias">
           <thead>
@@ -44,7 +44,7 @@
           </tbody>
         </table>
       </div>
-      <!-- Formulario a la derecha -->
+      <!-- Formulario -->
       <div class="contenedor-formulario">
         <form id="form-materia">
           <label>Nombre de la materia:<br>
@@ -72,7 +72,7 @@
             <input type="text" name="profesor" required>
           </label>
           <button type="submit">Confirmar</button>
-          <button type="button" id="cancelar-edicion">Cancelar</button>
+          <button type="button" class="cancelar-edicion">Cancelar</button>
         </form>
       </div>
     </div>

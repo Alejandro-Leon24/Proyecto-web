@@ -12,7 +12,7 @@
     <!-- Menú hamburguesa -->
     <nav>
         <div id="menu-btn">&#9776;</div>
-        <ul id="menu-desplegable" style="display: none;">
+        <ul id="menu-desplegable">
             <li><a href="index.html">Inicio</a></li>
             <li><a href="editar_materias.html">Editar</a></li>
             <li><a href="asistencias.html">Asistencias</a></li>
@@ -22,24 +22,22 @@
 
     <main></main>
 
-    <!-- Página: asistencias.html -->
-    
-
-
-    <!-- Plantilla para tabla de asistencias -->
+    <!-- Plantilla para tabla de asistencias con filtro -->
     <template id="tabla-asistencias">
         <div class="barra-filtros">
             <label for="mes-select"><b>Mes:</b></label>
             <select id="combo-mes"></select>
-    
+        </div>
+        <div class="barra-filtros">
             <label for="semana-select"><b>Semana:</b></label>
             <select id="combo-semana"></select>
-    
+        </div>
+        <div class="barra-filtros">
             <button id="btn-buscar">Buscar</button>
         </div>
         
-        <h1 style="text-align:center">Tabla de asistencias</h1>
-        <table border="1" style="margin: 0 auto; width: 100%; max-width: 800px;">
+        <h1>Tabla de asistencias</h1>
+        <table border="1">
             <thead>
                 <tr>
                     <th>Materia</th>

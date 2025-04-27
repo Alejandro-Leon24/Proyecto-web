@@ -1,4 +1,4 @@
-const CACHE_NAME = "asistencia-cache-v8";
+const CACHE_NAME = "asistencia-cache-v3";
 // Versión del caché, puedes incrementarlo para forzar la actualización
 
 // Lista de URLs a cachear
@@ -9,7 +9,11 @@ const urlsToCache = [
   "./asistencias.html",
   "./resumen.html",
   "./CSS/estilos.css",
-  "./JS/script.js",
+  "./JS/asistencias.js",
+  "./JS/main.js",
+  "./JS/materias.js",
+  "./JS/resumen.js",
+  "./JS/utilidades.js",
   "./IMG/icono.png",
   // Agrega aquí otros recursos que se necesites cachear
 ];

@@ -190,7 +190,8 @@ td, th {
   width: 100vw;           /* Ocupa el 100% del ancho de la ventana */
   height: 100vh;          /* Ocupa el 100% de la altura de la ventana */
   background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
-  backdrop-filter: blur(3px); /* Aplica un efecto de desenfoque al fondo */
+  -webkit-backdrop-filter: blur(3px); /* Para Safari */
+  backdrop-filter: blur(3px);          /* Para otros navegadores modernos */
   display: flex;          /* Utiliza flexbox */
   justify-content: center; /* Centra horizontalmente */
   align-items: center;     /* Centra verticalmente */

@@ -70,13 +70,18 @@ button:hover {
 }
 
 button.cancelar-edicion {
-  background-color: #ffcccc; /* Rojo pálido */
-  color: #a94442;              /* Rojo más oscuro para el texto */
+  background-color: #ff5c5c; /* Rojo pálido */
+  color: #fff;              /* Rojo más oscuro para el texto */
 }
 
 button.cancelar-edicion:hover {
-  background-color: #ff5c5c;   /* Rojo más encendido */
-  color: #fff;
+  background-color: #f69090;   /* Rojo más encendido */
+}
+button.boton-confirmar{
+  background-color: #497f5b;
+}
+button.boton-confirmar:hover{
+  background-color: #6eb383;
 }
 
 /* Estilos para el menú hamburguesa */

@@ -13,16 +13,23 @@ export function initResumen() {
         container.innerHTML = ""; // limpiar el main por si acaso
         container.appendChild(mensaje);
     } else {
-        // Aquí iría el renderizado de tabla resumen si hay datos
+        // Renderizar tabla resumen
         const clone = resumenTemplate.content.cloneNode(true);
         container.innerHTML = "";
         container.appendChild(clone);
-        // ... aquí puedes continuar mostrando datos
+
+        // Calcular totales y porcentajes por materia, deduplicando por materia, día y fecha
         const resumen = {};
+        const yaContados = new Set();
+
         asistencias.forEach(a => {
-            if (a.asistio === "si") {
-                if (!resumen[a.materiaNombre]) resumen[a.materiaNombre] = 0;
-                resumen[a.materiaNombre]++;
+            const fecha = new Date(a.fecha);
+            const clave = `${a.materiaId}_${a.dia}_${fecha.toDateString()}`;
+            if (!yaContados.has(clave)) {
+                if (!resumen[a.materiaNombre]) resumen[a.materiaNombre] = { total: 0, asistio: 0 };
+                resumen[a.materiaNombre].total++;
+                if (a.asistio === "si") resumen[a.materiaNombre].asistio++;
+                yaContados.add(clave);
             }
         });
 
@@ -36,28 +43,57 @@ export function initResumen() {
             encabezado.appendChild(th);
         });
 
-        // Construir fila de totales
-        const filaTotales = container.querySelector("#totales-resumen");
+        // Fila de asistencias "sí"
+        const filaAsistencias = container.querySelector("#totales-resumen");
         materias.forEach(m => {
             const td = document.createElement("td");
-            td.textContent = resumen[m];
-            filaTotales.appendChild(td);
+            td.textContent = resumen[m].asistio;
+            filaAsistencias.appendChild(td);
         });
 
-        // Mostrar observaciones
-        const pocas = materias.filter(m => resumen[m] < 3);
-        const total = Object.values(resumen).reduce((a, b) => a + b, 0);
+        // Fila de total de clases
+        const filaClases = container.querySelector("#clases-resumen");
+        if (filaClases) {
+            materias.forEach(m => {
+                const td = document.createElement("td");
+                td.textContent = resumen[m].total;
+                filaClases.appendChild(td);
+            });
+        }
 
+        // Fila de porcentaje de asistencia
+        const filaPorcentaje = container.querySelector("#porcentaje-resumen");
+        if (filaPorcentaje) {
+            materias.forEach(m => {
+                const td = document.createElement("td");
+                const porcentaje = resumen[m].total > 0
+                    ? Math.round((resumen[m].asistio / resumen[m].total) * 100)
+                    : 0;
+                td.textContent = `${porcentaje}%`;
+                filaPorcentaje.appendChild(td);
+            });
+        }
+
+        // Observaciones
+        const pocas = materias.filter(m => resumen[m].asistio < 3);
+        const porcentajeBajo = materias.filter(m =>
+            resumen[m].total > 0 &&
+            (resumen[m].asistio / resumen[m].total) < 0.6
+        );
         const reporte = container.querySelector("#reporte-asistencia");
         if (pocas.length > 0) {
             reporte.textContent = "Tienes poca asistencia en: " + pocas.join(", ");
+        } else if (porcentajeBajo.length > 0) {
+            reporte.textContent = "Atención: asistencia baja en: " + porcentajeBajo.join(", ");
         } else {
             reporte.textContent = "Tienes todas las asistencias completas.";
         }
 
-        // Agregar total general
+        // Total general
         const totalGeneral = document.createElement("p");
-        totalGeneral.textContent = `Total general de asistencias: ${total}`;
+        const totalAsistencias = materias.reduce((s, m) => s + resumen[m].asistio, 0);
+        const totalClases = materias.reduce((s, m) => s + resumen[m].total, 0);
+        totalGeneral.textContent = `Total general de asistencias: ${totalAsistencias} de ${totalClases} (${totalClases > 0 ? Math.round(totalAsistencias / totalClases * 100) : 0}%)`;
         container.appendChild(totalGeneral);
 
     }

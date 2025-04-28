@@ -15,38 +15,59 @@ export function initRegistroAsistencia() {
     const materias = JSON.parse(localStorage.getItem("materias")) || [];
     const asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
 
-    let materiaActual = materias.find(m =>
-        m.dias.includes(diaActual) &&
-        horaActual >= convertirAHorasDecimal(m.hora_inicio) &&
-        horaActual <= convertirAHorasDecimal(m.hora_fin)
-    );
+    // Buscar materia y horario correspondiente
+    let materiaActual = null;
+    let horarioActual = null;
+    for (let m of materias) {
+        if (!m.horarios) continue;
+        let h = m.horarios.find(h =>
+            h.dia === diaActual &&
+            horaActual >= convertirAHorasDecimal(h.hora_inicio) &&
+            horaActual <= convertirAHorasDecimal(h.hora_fin)
+        );
+        if (h) {
+            materiaActual = m;
+            horarioActual = h;
+            break;
+        }
+    }
 
-    if (materiaActual) {
+    if (materiaActual && horarioActual) {
         spanMateria.textContent = materiaActual.nombre;
 
+        // SOLO comparar por materiaId, dia y fecha para saber si ya hay asistencia hoy
         const yaRegistrada = asistencias.some(a => {
             const fecha = new Date(a.fecha);
-            return a.materiaId === materiaActual.id &&
-                fecha.toDateString() === ahora.toDateString();
+            return (
+                a.materiaId === materiaActual.id &&
+                a.dia === diaActual &&
+                fecha.toDateString() === ahora.toDateString()
+            );
         });
 
         if (yaRegistrada) {
             let mensajeYaRegistrada = `Ya registraste asistencia para la clase de ${materiaActual.nombre}. `;
 
-            // Buscar la siguiente clase
-            const siguientes = materias
-                .filter(m =>
-                    m.dias.includes(diaActual) &&
-                    convertirAHorasDecimal(m.hora_inicio) > horaActual
-                )
-                .sort((a, b) => convertirAHorasDecimal(a.hora_inicio) - convertirAHorasDecimal(b.hora_inicio));
+            // Buscar la siguiente clase (adaptado a horarios por día)
+            const siguientes = [];
+            for (let m of materias) {
+                if (!m.horarios) continue;
+                for (let h of m.horarios) {
+                    if (h.dia === diaActual && convertirAHorasDecimal(h.hora_inicio) > horaActual) {
+                        siguientes.push({ materia: m, horario: h });
+                    }
+                }
+            }
+            siguientes.sort((a, b) =>
+                convertirAHorasDecimal(a.horario.hora_inicio) - convertirAHorasDecimal(b.horario.hora_inicio)
+            );
 
             if (siguientes.length > 0) {
                 const siguiente = siguientes[0];
-                const mins = Math.round((convertirAHorasDecimal(siguiente.hora_inicio) - horaActual) * 60);
+                const mins = Math.round((convertirAHorasDecimal(siguiente.horario.hora_inicio) - horaActual) * 60);
                 const horas = Math.floor(mins / 60);
                 const minutos = mins % 60;
-                mensajeYaRegistrada += `Tu siguiente clase, ${siguiente.nombre}, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
+                mensajeYaRegistrada += `Tu siguiente clase, ${siguiente.materia.nombre}, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
             } else {
                 mensajeYaRegistrada += `No tienes más clases pendientes por hoy.`;
             }
@@ -77,11 +98,12 @@ export function initRegistroAsistencia() {
             return;
         }
 
-        // Verificar si ya registró asistencia para esta materia hoy
+        // SOLO comparar por materiaId, dia, fecha para evitar duplicados aunque cambie el horario
         const yaRegistrada = asistencias.some(a => {
             const fecha = new Date(a.fecha);
             return (
-                a.materiaNombre === materiaActual.nombre &&
+                a.materiaId === materiaActual.id &&
+                a.dia === diaActual &&
                 fecha.toDateString() === ahora.toDateString()
             );
         });
@@ -91,10 +113,13 @@ export function initRegistroAsistencia() {
             return;
         }
 
-        // Guardar asistencia
+        // Guardar asistencia (puedes seguir guardando el horario para referencia/histórico)
         asistencias.push({
             materiaId: materiaActual.id,
             materiaNombre: materiaActual.nombre, // Para mostrar
+            dia: diaActual,
+            hora_inicio: horarioActual.hora_inicio,
+            hora_fin: horarioActual.hora_fin,
             fecha: new Date().toISOString(),
             asistio: seleccion.value
         });
@@ -108,20 +133,26 @@ export function initRegistroAsistencia() {
 
         // Actualizar mensaje después del modal
         setTimeout(() => {
-            const siguientes = materias
-                .filter(m =>
-                    m.dias.includes(diaActual) &&
-                    convertirAHorasDecimal(m.hora_inicio) > horaActual
-                )
-                .sort((a, b) => convertirAHorasDecimal(a.hora_inicio) - convertirAHorasDecimal(b.hora_inicio));
+            const siguientes = [];
+            for (let m of materias) {
+                if (!m.horarios) continue;
+                for (let h of m.horarios) {
+                    if (h.dia === diaActual && convertirAHorasDecimal(h.hora_inicio) > horaActual) {
+                        siguientes.push({ materia: m, horario: h });
+                    }
+                }
+            }
+            siguientes.sort((a, b) =>
+                convertirAHorasDecimal(a.horario.hora_inicio) - convertirAHorasDecimal(b.horario.hora_inicio)
+            );
 
             let mensaje = `Ya registraste asistencia para la clase de ${materiaActual.nombre}. `;
             if (siguientes.length > 0) {
                 const siguiente = siguientes[0];
-                const mins = Math.round((convertirAHorasDecimal(siguiente.hora_inicio) - horaActual) * 60);
+                const mins = Math.round((convertirAHorasDecimal(siguiente.horario.hora_inicio) - horaActual) * 60);
                 const horas = Math.floor(mins / 60);
                 const minutos = mins % 60;
-                mensaje += `Tu siguiente clase, ${siguiente.nombre}, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
+                mensaje += `Tu siguiente clase, ${siguiente.materia.nombre}, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos.`;
             } else {
                 mensaje += `No tienes más clases pendientes por hoy.`;
             }
@@ -139,7 +170,6 @@ export function initTablaAsistencias() {
     container.innerHTML = "";
     container.appendChild(clone);
 
-    // Ahora que el contenido está en el DOM, ya existen los elementos
     const comboMes = document.getElementById("combo-mes");
     const comboSemana = document.getElementById("combo-semana");
     const btnBuscar = document.getElementById("btn-buscar");
@@ -204,16 +234,17 @@ export function initTablaAsistencias() {
         const diasSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
         const materiasAgrupadas = {};
 
+        // Agrupar asistencias por materia y por día (usando el campo 'dia' de la asistencia)
         asistenciasFiltradas.forEach(a => {
             const fecha = new Date(a.fecha);
-            const dia = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"][fecha.getDay()];
+            const diaTexto = a.dia; // Usar el campo 'dia' guardado en la asistencia
             if (!materiasAgrupadas[a.materiaNombre]) materiasAgrupadas[a.materiaNombre] = {};
-            const hora = fecha.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            materiasAgrupadas[a.materiaNombre][dia] = {
+            if (!materiasAgrupadas[a.materiaNombre][diaTexto]) materiasAgrupadas[a.materiaNombre][diaTexto] = [];
+            materiasAgrupadas[a.materiaNombre][diaTexto].push({
                 fecha: fecha.toLocaleDateString(),
-                hora,
+                horario: `${a.hora_inicio} - ${a.hora_fin}`,
                 icono: a.asistio === "si" ? "✔" : "✘"
-            };
+            });
         });
 
         Object.keys(materiasAgrupadas).forEach(nombre => {
@@ -224,8 +255,14 @@ export function initTablaAsistencias() {
 
             diasSemana.forEach(dia => {
                 const td = document.createElement("td");
-                const data = materiasAgrupadas[nombre][dia];
-                td.innerHTML = data ? `${data.icono}<br><small>${data.fecha}</small><br><small>${data.hora}</small>` : "-";
+                const asistenciasDia = materiasAgrupadas[nombre][dia];
+                if (asistenciasDia && asistenciasDia.length > 0) {
+                    td.innerHTML = asistenciasDia.map(data =>
+                        `${data.icono}<br><small>${data.fecha}</small><br><small>${data.horario}</small>`
+                    ).join("<hr>");
+                } else {
+                    td.innerHTML = "-";
+                }
                 fila.appendChild(td);
             });
             tbody.appendChild(fila);

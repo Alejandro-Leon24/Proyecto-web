@@ -81,9 +81,7 @@ export function initResumen() {
             (resumen[m].asistio / resumen[m].total) < 0.6
         );
         const reporte = container.querySelector("#reporte-asistencia");
-        if (pocas.length > 0) {
-            reporte.textContent = "Tienes poca asistencia en: " + pocas.join(", ");
-        } else if (porcentajeBajo.length > 0) {
+        if (porcentajeBajo.length > 0) {
             reporte.textContent = "Atención: asistencia baja en: " + porcentajeBajo.join(", ");
         } else {
             reporte.textContent = "Tienes todas las asistencias completas.";

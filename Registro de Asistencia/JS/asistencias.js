@@ -274,30 +274,57 @@ export function initTablaAsistencias() {
     function mostrarAsistenciasFiltradas(asistenciasFiltradas) {
         const tbody = container.querySelector("tbody");
         tbody.innerHTML = "";
-        const diasSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+        const diasSemana = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
+        const diasSemanaDisplay = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
         const materiasAgrupadas = {};
 
         asistenciasFiltradas.forEach(a => {
             const fecha = new Date(a.fecha);
+            
+            // Obtenemos el día almacenado (que viene sin acentos debido a quitarAcentos())
             const diaTexto = a.dia;
-            if (!materiasAgrupadas[a.materiaNombre]) materiasAgrupadas[a.materiaNombre] = {};
-            if (!materiasAgrupadas[a.materiaNombre][diaTexto]) materiasAgrupadas[a.materiaNombre][diaTexto] = [];
-            materiasAgrupadas[a.materiaNombre][diaTexto].push({
-                fecha: fecha.toLocaleDateString(),
-                horario: `${a.hora_inicio} - ${a.hora_fin}`,
-                icono: a.asistio === "si" ? "✔" : "✘"
-            });
+            
+            // Encontrar el índice del día para luego usar el display correspondiente
+            const indiceDia = diasSemana.findIndex(d => 
+                d.toLowerCase() === diaTexto.toLowerCase());
+                
+            console.log(`Fecha: ${fecha.toLocaleDateString()}, Día: ${diaTexto}, Índice encontrado: ${indiceDia}`);
+            
+            if (indiceDia !== -1) {
+                // Inicializamos las estructuras si no existen
+                if (!materiasAgrupadas[a.materiaNombre]) {
+                    materiasAgrupadas[a.materiaNombre] = {};
+                }
+                
+                // Usamos el día sin acentos para agrupar internamente
+                const diaSinAcentos = diasSemana[indiceDia];
+                if (!materiasAgrupadas[a.materiaNombre][diaSinAcentos]) {
+                    materiasAgrupadas[a.materiaNombre][diaSinAcentos] = [];
+                }
+                
+                // Añadimos la entrada
+                materiasAgrupadas[a.materiaNombre][diaSinAcentos].push({
+                    fecha: fecha.toLocaleDateString(),
+                    horario: `${a.hora_inicio} - ${a.hora_fin}`,
+                    icono: a.asistio === "si" ? "✔" : "✘"
+                });
+            } else {
+                console.warn(`¡No se encontró el día "${diaTexto}" en el array de días!`);
+            }
         });
-
+    
+        // Crear filas para cada materia
         Object.keys(materiasAgrupadas).forEach(nombre => {
             const fila = document.createElement("tr");
             const tdMateria = document.createElement("td");
             tdMateria.innerHTML = `<strong>${nombre}</strong>`;
             fila.appendChild(tdMateria);
-
-            diasSemana.forEach(dia => {
+    
+            // Crear celdas para cada día de la semana
+            diasSemana.forEach((dia, index) => {
                 const td = document.createElement("td");
                 const asistenciasDia = materiasAgrupadas[nombre][dia];
+                
                 if (asistenciasDia && asistenciasDia.length > 0) {
                     td.innerHTML = asistenciasDia.map(data =>
                         `${data.icono}<br><small>${data.fecha}</small><br><small>${data.horario}</small>`

@@ -1,4 +1,5 @@
 import { mostrarMensajePersonalizado, quitarAcentos, convertirAHorasDecimal } from './utilidades.js';
+//Manejo de logica de asistencia para registrarla y mostrarla en la tabla de asistencias
 
 export function initRegistroAsistencia() {
     const spanMateria = document.getElementById("nombre-materia");
@@ -189,29 +190,34 @@ export function initTablaAsistencias() {
     function llenarComboSemanas(mesSeleccionado, anio = new Date().getFullYear()) {
         comboSemana.innerHTML = "";
         const primerDiaMes = new Date(anio, mesSeleccionado, 1);
-        let diaSemana = primerDiaMes.getDay();  // 0 (domingo) - 6 (sábado)
+        let diaSemana = primerDiaMes.getDay(); // 0 (domingo) - 6 (sábado)
         let ajuste = 0;
-
+    
         if (diaSemana !== 1) { // Si no es lunes
             ajuste = (diaSemana === 0 ? -6 : 1 - diaSemana); // Ajuste para llegar al lunes anterior
         }
-
+    
         let inicioSemana = new Date(primerDiaMes.getFullYear(), primerDiaMes.getMonth(), primerDiaMes.getDate() + ajuste);
         const ultimoDiaMes = new Date(anio, mesSeleccionado + 1, 0);
-
+    
         while (inicioSemana <= ultimoDiaMes) {
-            let finSemana = new Date(inicioSemana.getFullYear(), inicioSemana.getMonth(), inicioSemana.getDate());
+            let finSemana = new Date(inicioSemana);
             finSemana.setDate(inicioSemana.getDate() + 6);
-
-            if (finSemana > ultimoDiaMes) {
-                finSemana = new Date(ultimoDiaMes.getFullYear(), ultimoDiaMes.getMonth(), ultimoDiaMes.getDate());
+    
+            // Si finSemana cruza al siguiente mes, ajustamos el mes y posiblemente el año
+            if (finSemana.getMonth() !== mesSeleccionado) {
+                if (finSemana.getMonth() === 0) { // Si cruzamos de diciembre a enero
+                    finSemana = new Date(anio + 1, 0, finSemana.getDate());
+                } else {
+                    finSemana = new Date(anio, mesSeleccionado + 1, finSemana.getDate());
+                }
             }
-
+    
             const option = document.createElement("option");
             option.value = `${inicioSemana.getDate()}-${finSemana.getDate()}`;
-            option.textContent = `${inicioSemana.getDate()} al ${finSemana.getDate()}`;
+            option.textContent = `${inicioSemana.getDate()} al ${finSemana.getDate()} (${meses[inicioSemana.getMonth()]})`;
             comboSemana.appendChild(option);
-
+    
             inicioSemana.setDate(inicioSemana.getDate() + 7);
         }
     }
@@ -219,12 +225,49 @@ export function initTablaAsistencias() {
     function filtrarAsistenciasPorSemana(mes, rangoDias, anio) {
         const asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
         const [diaInicio, diaFin] = rangoDias.split("-").map(Number);
+        
+        // Obtenemos el texto de la opción seleccionada para determinar el mes real de inicio
+        const opcionSeleccionada = comboSemana.options[comboSemana.selectedIndex].textContent;
+        const mesTextoInicio = opcionSeleccionada.match(/\((.*?)\)/)[1]; // Extrae el mes entre paréntesis
+        
+        // Encontrar el índice del mes de inicio basado en el texto
+        const mesInicio = meses.findIndex(m => 
+            m.toLowerCase() === mesTextoInicio.toLowerCase());
+        
+        // Determinar si la semana cruza al mes siguiente o al mes anterior
+        let mesReal = mes;
+        let mesFin = mes;
+        
+        // Si el mes del texto de la opción no coincide con el mes seleccionado,
+        // significa que estamos viendo una semana que comenzó en otro mes
+        if (mesInicio !== mes) {
+            mesReal = mesInicio;
+        }
+        
+        // Calcular la fecha completa de inicio basada en el mes real
+        const inicioSemana = new Date(anio, mesReal, diaInicio);
+        
+        // Si diaFin < diaInicio, significa que la semana termina en el mes siguiente
+        if (diaFin < diaInicio && mesReal === mes) {
+            mesFin = (mes + 1) % 12;
+            // Si cruzamos de diciembre a enero, incrementamos el año
+            const anioFin = mesFin === 0 ? anio + 1 : anio;
+            var finSemana = new Date(anioFin, mesFin, diaFin);
+        } 
+        // Si mesReal !== mes, significa que la semana comienza en el mes anterior
+        else if (mesReal !== mes) {
+            // La fecha de fin está en el mes seleccionado (mes)
+            var finSemana = new Date(anio, mes, diaFin);
+        } 
+        // Caso normal: la semana está completamente dentro del mes
+        else {
+            var finSemana = new Date(anio, mes, diaFin);
+        }
+        
+        // Filtrar asistencias dentro del rango completo
         return asistencias.filter(a => {
             const fecha = new Date(a.fecha);
-            return fecha.getMonth() === mes &&
-                fecha.getFullYear() === anio &&
-                fecha.getDate() >= diaInicio &&
-                fecha.getDate() <= diaFin;
+            return fecha >= inicioSemana && fecha <= finSemana;
         });
     }
 
@@ -234,10 +277,9 @@ export function initTablaAsistencias() {
         const diasSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
         const materiasAgrupadas = {};
 
-        // Agrupar asistencias por materia y por día (usando el campo 'dia' de la asistencia)
         asistenciasFiltradas.forEach(a => {
             const fecha = new Date(a.fecha);
-            const diaTexto = a.dia; // Usar el campo 'dia' guardado en la asistencia
+            const diaTexto = a.dia;
             if (!materiasAgrupadas[a.materiaNombre]) materiasAgrupadas[a.materiaNombre] = {};
             if (!materiasAgrupadas[a.materiaNombre][diaTexto]) materiasAgrupadas[a.materiaNombre][diaTexto] = [];
             materiasAgrupadas[a.materiaNombre][diaTexto].push({
@@ -269,7 +311,6 @@ export function initTablaAsistencias() {
         });
     }
 
-    // Inicializar combos
     llenarComboMeses();
     const mesActual = new Date().getMonth();
     const anioActual = new Date().getFullYear();
@@ -288,7 +329,6 @@ export function initTablaAsistencias() {
         mostrarAsistenciasFiltradas(filtradas);
     });
 
-    // Mostrar semana actual
     const fechaHoy = new Date();
     const dia = fechaHoy.getDate();
     const opciones = comboSemana.options;

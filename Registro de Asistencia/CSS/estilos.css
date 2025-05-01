@@ -28,7 +28,7 @@ h1, p {
 /* Estilos para elementos principales (main, form, table, template, nav) */
 main, form, template, nav {
   width: 100%;          /* Ocupan el 100% del ancho de su contenedor */
-  max-width: 600px;      /* Ancho máximo de 600px */
+  max-width: 800px;      /* Ancho máximo de 800px */
 }
 
 /* Estilos para el formulario */
@@ -40,6 +40,8 @@ form {
   display: flex;             /* Utiliza flexbox */
   flex-direction: column;    /* Organiza los elementos en columna */
   gap: 12px;                /* Espacio entre elementos */
+  max-width: 600px;      /* Ancho máximo de 600px */
+  margin: 0 auto;          /* Centra el formulario horizontalmente */
 }
 
 /* Estilos para campos de texto, tiempo y select */
@@ -152,12 +154,15 @@ nav {
 
 /* Estilos para tablas */
 table {
-  width: 100%;             /* Ocupa el 100% del ancho */
+  width: 100%;/* Ocupa el 100% del ancho */
   border-collapse: collapse; /* Colapsa los bordes de las celdas */
   background-color: #fff;   /* Fondo blanco */
   border-radius: 10px;      /* Bordes redondeados */
   overflow: hidden;        /* Oculta el contenido que excede las dimensiones */
-  font-size: 1.1rem;       /* Tamaño de la fuente */
+  font-size: 1rem;       /* Tamaño de la fuente */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 thead tr {
@@ -165,7 +170,7 @@ thead tr {
 }
 
 td, th {
-  padding: 12px;           /* Relleno interno */
+  padding: 10px;           /* Relleno interno */
   text-align: center;       /* Centra el texto */
   border-bottom: 1px solid #ccc; /* Borde inferior gris claro */
 }
@@ -235,6 +240,9 @@ td, th {
   gap: 5px;                /* Espacio entre elementos */
   flex-wrap: nowrap;        /* Evita que los elementos se envuelvan */
   margin-bottom: 20px;     /* Margen inferior */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .barra-filtros label {
@@ -251,6 +259,8 @@ td, th {
   font-size: 1rem;         /* Tamaño de la fuente */
   border-radius: 8px;       /* Bordes redondeados */
   border: 1px solid #ccc; /* Borde gris claro */
+  max-width: 100%;
+  
 }
 
 .barra-filtros button {

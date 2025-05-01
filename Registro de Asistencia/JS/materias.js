@@ -1,4 +1,5 @@
 import { mostrarMensajePersonalizado, generarIdUnico, horariosSeSolapan } from './utilidades.js';
+//CRUD de materias
 export function initMaterias() {
     const container = document.querySelector("main");
     const tmpl = document.getElementById("editar-materias");

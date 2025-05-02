@@ -17,7 +17,7 @@ body {
   padding: 20px;            /* Añade un relleno alrededor del contenido */
   min-height: 100vh;         /* Asegura que el cuerpo ocupe al menos el 100% de la altura de la ventana */
   position: relative;       /* Establece el contexto de posicionamiento para elementos absolutamente posicionados dentro del body */
-  min-width: 760px;
+  min-width: 720px;
   overflow-x: auto;
 
 }

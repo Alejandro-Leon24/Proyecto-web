@@ -47,20 +47,22 @@ export function initLogin() {
             constructor(message) {
                 super(message);
                 this.name = "UsuarioNoExistente";
+                this.cssClass = "error-usuario";
             }
         }
-
         class ContraseñaIncorrecta extends Error {
             constructor(message) {
                 super(message);
                 this.name = "ContraseñaIncorrecta";
+                this.cssClass = "error-contraseña";
             }
         }
-
         class CuentaBloqueada extends Error {
-            constructor(message) {
-                super(message);
+            constructor(minutosRestantes) {
+                super(`La cuenta está bloqueada. Intenta nuevamente en ${minutosRestantes} minutos.`);
                 this.name = "CuentaBloqueada";
+                this.cssClass = "error-bloqueada";
+                this.minutosRestantes = minutosRestantes;
             }
         }
 
@@ -70,7 +72,7 @@ export function initLogin() {
         form.addEventListener("submit", (event) => {
             event.preventDefault();
 
-            const correo = form.username.value.trim(); // Ahora usamos "correo"
+            const correo = form.username.value.trim();
             const password = form.password.value.trim();
 
             try {
@@ -88,11 +90,7 @@ export function initLogin() {
                     const diferenciaMinutos = (ahora - tiempoBloqueo) / (1000 * 60);
 
                     if (diferenciaMinutos < 10) {
-                        throw new CuentaBloqueada(
-                            `La cuenta está bloqueada. Intenta nuevamente en ${
-                                Math.ceil(10 - diferenciaMinutos)
-                            } minutos.`
-                        );
+                        throw new CuentaBloqueada(Math.ceil(10 - diferenciaMinutos));
                     } else {
                         // Desbloquear cuenta automáticamente después de 10 minutos
                         delete intentosFallidos[correo];
@@ -119,16 +117,27 @@ export function initLogin() {
                 alert("Inicio de sesión exitoso. Bienvenido, " + usuario.nombre + "!");
                 window.location.reload();
             } catch (error) {
-                if (error instanceof UsuarioNoExistente) {
-                    alert(error.message);
-                } else if (error instanceof ContraseñaIncorrecta) {
-                    alert(error.message);
-                } else if (error instanceof CuentaBloqueada) {
-                    alert(error.message);
+                if (error instanceof UsuarioNoExistente ||
+                    error instanceof ContraseñaIncorrecta ||
+                    error instanceof CuentaBloqueada) {
+                        mostrarErrorEnUI(error, form);
                 } else {
                     console.error("Error inesperado:", error);
                 }
             }
         });
     }
+}
+
+function mostrarErrorEnUI(error, form) {
+    let errorDiv = document.getElementById("mensaje-error-login");
+    if (!errorDiv) {
+        errorDiv = document.createElement("div");
+        errorDiv.id = "mensaje-error-login";
+        form.parentNode.insertBefore(errorDiv, form);
+    }
+    errorDiv.className = error.cssClass;
+    errorDiv.textContent = error.message;
+    errorDiv.style.display = "block";
+    setTimeout(() => errorDiv.style.display = "none", 4000);
 }

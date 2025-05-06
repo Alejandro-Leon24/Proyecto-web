@@ -309,3 +309,27 @@ td, th {
 .login-usuario button.cancelar-edicion{
   width: 100%;
 }
+.error-usuario {
+  background: #ffe0e0;
+  color: #b71c1c;
+  border-left: 5px solid #b71c1c;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.error-contraseña {
+  background: #fff3cd;
+  color: #856404;
+  border-left: 5px solid #856404;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.error-bloqueada {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-left: 5px solid #1565c0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}

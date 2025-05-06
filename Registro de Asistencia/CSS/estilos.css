@@ -17,7 +17,6 @@ body {
   padding: 20px;            /* Añade un relleno alrededor del contenido */
   min-height: 100vh;         /* Asegura que el cuerpo ocupe al menos el 100% de la altura de la ventana */
   position: relative;       /* Establece el contexto de posicionamiento para elementos absolutamente posicionados dentro del body */
-  min-width: 720px;
   overflow-x: auto;
 
 }
@@ -50,6 +49,9 @@ form {
 /* Estilos para campos de texto, tiempo y select */
 input[type="text"],
 input[type="time"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
 select {
   padding: 10px;        /* Relleno interno */
   font-size: 1.1rem;    /* Tamaño de la fuente */
@@ -246,6 +248,7 @@ td, th {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 .barra-filtros label {
@@ -276,4 +279,33 @@ td, th {
 
 .barra-filtros button:hover {
   background-color: #8da897; /* Color de fondo verde al pasar el ratón */
+}
+
+.login-container{
+  margin: auto;
+  background-color: white;
+  padding: 10px;
+  border: 50px;
+  border-radius: 10px;
+  width: 100%;     
+  max-width: 600px;
+}
+.login-container button{
+  width: 49%;
+  margin-top: 10px;
+}
+.login-container h2{
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.login-usuario img{
+  display: flex;
+  margin: 20px auto;
+  width: 15%;
+}
+.login-usuario button.cancelar-edicion{
+  width: 100%;
 }

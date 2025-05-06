@@ -2,6 +2,8 @@ import { initMaterias } from './materias.js';
 import { initRegistroAsistencia, initTablaAsistencias } from './asistencias.js';
 import { initResumen } from './resumen.js';
 import { mostrarMensajePersonalizado } from './utilidades.js';
+import { initLogin } from './login.js';
+import { initCrearCuenta } from "./crearCuenta.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const path = window.location.pathname;
@@ -12,7 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const templates = {
         "editar_materias.html": "editar-materias",
         "asistencias.html": "tabla-asistencias",
-        "resumen.html": "resumen-asistencia"
+        "resumen.html": "resumen-asistencia",
+        "Login.html": "login-template",
+        "Crear-Cuenta.html": "crear-cuenta-template"
     };
 
     const container = document.querySelector("main");
@@ -41,6 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
         initTablaAsistencias();
     } else if (page === "resumen.html") {
         initResumen();
+    }else if (page === "Login.html") { // Inicializar Login
+        initLogin();
+    }else if (page === "Crear-Cuenta.html") { // Inicializar Crear Cuenta
+        initCrearCuenta();
     }
 
     // Menú desplegable

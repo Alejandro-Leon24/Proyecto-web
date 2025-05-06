@@ -4,6 +4,8 @@ const urlsToCache = [
   "./index.html",
   "./editar_materias.html",
   "./asistencias.html",
+  "./Login.html",
+  "./Crear-Cuenta.html",
   "./resumen.html",
   "./CSS/estilos.css",
   "./JS/asistencias.js",
@@ -11,7 +13,10 @@ const urlsToCache = [
   "./JS/materias.js",
   "./JS/resumen.js",
   "./JS/utilidades.js",
+  "./JS/login.js",
+  "./JS/crearCuenta.js",
   "./IMG/icono.png",
+  "./IMG/user.png"
 ];
 
 // Instala el service worker y cachea los recursos

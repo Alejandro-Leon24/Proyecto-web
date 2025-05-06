@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="CSS/estilos.css">
+    <title>Crear Cuenta</title>
+</head>
+
+<body>
+    <!-- Menú hamburguesa -->
+    <nav>
+        <div id="menu-btn">&#9776;</div>
+        <ul id="menu-desplegable">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="editar_materias.html">Editar</a></li>
+            <li><a href="asistencias.html">Asistencias</a></li>
+            <li><a href="resumen.html">Resumen</a></li>
+            <li><a href="Login.html">Mi cuenta</a></li>
+        </ul>
+    </nav>
+    <!-- Contenedor principal -->
+    <main></main>
+
+    <template id="crear-cuenta-template">
+        <div class="login-container">
+            <h2>Crear Cuenta</h2>
+            <form id="crear-cuenta-form">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="correo">Correo</label>
+                <input type="email" id="correo" name="correo" required>
+
+                <label for="contraseña">Contraseña</label>
+                <input type="password" id="contraseña" name="contraseña" required>
+
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+
+                <div>
+                    <button type="submit" class="boton-confirmar">Crear Cuenta</button>
+                    <button type="button" id="cancelar-btn" class="cancelar-edicion">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </template>
+    <script type="module" src="JS/main.js"></script>
+    <script src="JS/update-sw.js"></script> <!-- Control de versiones SW -->
+</body>
+
+</html>

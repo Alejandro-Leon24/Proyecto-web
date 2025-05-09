@@ -19,9 +19,8 @@ Aplicación web progresiva (PWA) que permite registrar asistencias académicas d
 
 - **Lenguajes:** HTML5, CSS3, JavaScript  
 - **Backend (planificado):** PHP  
-- **Base de datos:** SQLite (local y sencilla de implementar)  
+- **Base de datos:** MySQL 
 - **PWA:** Service Worker + manifest.json  
-- **Interfaz responsiva:** Flexbox y CSS Grid  
 - **Almacenamiento temporal:** `localStorage` (modo offline)  
 - **Control de versiones:** Git + GitHub  
 
@@ -50,14 +49,6 @@ Aplicación web progresiva (PWA) que permite registrar asistencias académicas d
 - ✅ Botón de **cancelar edición** en materias
 - ✅ Funcionalidad **offline total** (como app instalada o sin internet)
 - ✅ Preparado para sincronización futura con base de datos remota
-
----
-
-## 🔒 Seguridad (Planificada)
-
-- 🔐 Sistema de autenticación con registro e inicio de sesión
-- 🔐 Cifrado de contraseñas con algoritmo hash (**SHA-256**)
-- 🔐 Recuperación de cuenta mediante correo electrónico
 
 ---
 

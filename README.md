@@ -11,7 +11,7 @@ Aplicación web progresiva (PWA) que permite registrar asistencias académicas d
     <meta http-equiv="refresh" content="0; url=Registro de Asistencia/index.html" />
   </head>
   <body>
-    <p>Redirigiendo a <a href="Registro de Asistencia/index.html">Registro de Asistencia/index.html</a></p>
+    <p>Redirigiendo a <a href="Registro de Asistencia/index.php">Registro de Asistencia/index.html</a></p>
   </body>
 </html>
 

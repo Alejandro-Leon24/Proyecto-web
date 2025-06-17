@@ -1,0 +1,340 @@
+/* estilos.css */
+/* Reseteo de estilos y modelo de caja */
+* {
+  margin: 0;        /* Elimina los márgenes predeterminados de los elementos */
+  padding: 0;       /* Elimina el relleno predeterminado de los elementos */
+  box-sizing: border-box; /* Incluye el padding y el borde en el ancho y alto total de un elemento */
+}
+
+/* Estilos generales del cuerpo */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Establece la fuente principal */
+  background-color: #f5f5f5;  /* Color de fondo gris claro */
+  color: #333;               /* Color de texto gris oscuro */
+  display: flex;            /* Utiliza flexbox para el diseño */
+  flex-direction: column;   /* Organiza los elementos en columna */
+  align-items: center;      /* Centra los elementos horizontalmente */
+  padding: 20px;            /* Añade un relleno alrededor del contenido */
+  min-height: 100vh;         /* Asegura que el cuerpo ocupe al menos el 100% de la altura de la ventana */
+  position: relative;       /* Establece el contexto de posicionamiento para elementos absolutamente posicionados dentro del body */
+  overflow-x: auto;
+
+}
+
+/* Estilos para encabezados y párrafos */
+h1, p {
+  text-align: center;    /* Centra el texto */
+  margin-bottom: 20px;   /* Añade un margen inferior */
+}
+
+/* Estilos para elementos principales (main, form, table, template, nav) */
+main, form, template, nav {
+  width: 100%;          /* Ocupan el 100% del ancho de su contenedor */
+  max-width: 800px;      /* Ancho máximo de 800px */
+}
+
+/* Estilos para el formulario */
+form {
+  background-color: #ffffff;   /* Fondo blanco */
+  padding: 20px;             /* Relleno interno */
+  border-radius: 12px;        /* Bordes redondeados */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra suave */
+  display: flex;             /* Utiliza flexbox */
+  flex-direction: column;    /* Organiza los elementos en columna */
+  gap: 12px;                /* Espacio entre elementos */
+  max-width: 600px;      /* Ancho máximo de 600px */
+  margin: 0 auto;          /* Centra el formulario horizontalmente */
+}
+
+/* Estilos para campos de texto, tiempo y select */
+input[type="text"],
+input[type="time"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+select {
+  padding: 10px;        /* Relleno interno */
+  font-size: 1.1rem;    /* Tamaño de la fuente */
+  border-radius: 8px;   /* Bordes redondeados */
+  border: 1px solid #ccc; /* Borde gris claro */
+  width: 100%;          /* Ocupan el 100% del ancho */
+}
+
+/* Estilos para botones */
+button {
+  padding: 12px;             /* Relleno interno */
+  background-color: #aac4b2;   /* Color de fondo verde claro */
+  color: #fff;               /* Color de texto blanco */
+  font-size: 1.1rem;        /* Tamaño de la fuente */
+  border: none;              /* Sin borde */
+  border-radius: 10px;       /* Bordes redondeados */
+  cursor: pointer;           /* Cambia el cursor a una mano */
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+button:hover {
+  background-color: #8da897; /* Color de fondo verde al pasar el ratón */
+}
+
+button.cancelar-edicion {
+  background-color: #ff5c5c; /* Rojo pálido */
+  color: #fff;              /* Rojo más oscuro para el texto */
+}
+
+button.cancelar-edicion:hover {
+  background-color: #f69090;   /* Rojo más encendido */
+}
+button.boton-confirmar{
+  background-color: #497f5b;
+}
+button.boton-confirmar:hover{
+  background-color: #6eb383;
+}
+
+/* Estilos para el menú hamburguesa */
+nav {
+  width: 100%;          /* Ocupa el 100% del ancho */
+  max-width: 600px;      /* Ancho máximo de 600px */
+  margin-bottom: 20px;   /* Margen inferior */
+  z-index: 1;            /* Asegura que el menú esté por encima de otros elementos */
+}
+
+#menu-btn {
+  font-size: 2rem;           /* Tamaño de la fuente */
+  cursor: pointer;           /* Cambia el cursor a una mano */
+  background-color: #e2e2e2; /* Color de fondo gris claro */
+  padding: 10px;             /* Relleno interno */
+  border-radius: 10px;       /* Bordes redondeados */
+  text-align: center;       /* Centra el texto */
+}
+
+#menu-desplegable {
+  list-style: none;       /* Elimina los estilos de lista */
+  padding: 10px 0;        /* Relleno superior e inferior */
+  transition: max-height 0.3s ease; /* Transición suave de la altura máxima */
+  overflow: hidden;        /* Oculta el contenido que excede las dimensiones */
+  background-color: #ffffff; /* Fondo blanco */
+  border-radius: 10px;       /* Bordes redondeados */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave */
+  margin-top: 10px;        /* Margen superior */
+  display: none;           /* Oculta el menú por defecto */
+}
+
+#menu-desplegable.show {
+  display: block;         /* Muestra el menú cuando tiene la clase 'show' */
+}
+
+#menu-desplegable li {
+  padding: 10px 20px;     /* Relleno interno */
+  text-align: center;       /* Centra el texto */
+}
+
+#menu-desplegable li a {
+  text-decoration: none; /* Elimina el subrayado de los enlaces */
+  font-size: 1.2rem;    /* Tamaño de la fuente */
+  color: #444;           /* Color de texto gris oscuro */
+}
+
+#menu-desplegable li a:hover {
+  color: #000;           /* Color de texto negro al pasar el ratón */
+  font-weight: bold;     /* Texto en negrita al pasar el ratón */
+}
+
+/* Animación para el menú desplegable */
+.show {
+  display: block !important; /* Muestra el elemento */
+  animation: desplegar 0.3s ease-out; /* Aplica la animación 'desplegar' */
+}
+
+@keyframes desplegar {
+  from {
+    transform: scaleY(0); /* Escala verticalmente desde 0 */
+    opacity: 0;           /* Opacidad inicial 0 */
+  }
+  to {
+    transform: scaleY(1); /* Escala verticalmente hasta 1 */
+    opacity: 1;           /* Opacidad final 1 */
+  }
+}
+
+/* Estilos para tablas */
+table {
+  width: 100%;/* Ocupa el 100% del ancho */
+  border-collapse: collapse; /* Colapsa los bordes de las celdas */
+  background-color: #fff;   /* Fondo blanco */
+  border-radius: 10px;      /* Bordes redondeados */
+  overflow: hidden;        /* Oculta el contenido que excede las dimensiones */
+  font-size: 1rem;       /* Tamaño de la fuente */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+thead tr {
+  background-color: #dde6e0; /* Color de fondo verde claro para la cabecera */
+}
+
+td, th {
+  padding: 10px;           /* Relleno interno */
+  text-align: center;       /* Centra el texto */
+  border-bottom: 1px solid #ccc; /* Borde inferior gris claro */
+}
+
+.contenedor-editar-materias {
+  display: flex;
+  flex-direction: column; /* Inicialmente vertical */
+  gap: 20px; /* Espacio entre los contenedores */
+}
+
+/* Estilos para el mensaje temporal de resumen vacío */
+#mensaje-resumen-vacio {
+  font-size: 1.2rem;        /* Tamaño de la fuente */
+  text-align: center;       /* Centra el texto */
+  background-color: #fff;   /* Fondo blanco */
+  padding: 20px;             /* Relleno interno */
+  border-radius: 10px;      /* Bordes redondeados */
+  margin-top: 20px;        /* Margen superior */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Estilos para la ventana emergente (modal) */
+#modal-mensaje {
+  position: fixed;        /* Posicionamiento fijo en la ventana */
+  top: 0;                 /* Se ubica en la parte superior */
+  left: 0;                /* Se ubica en la parte izquierda */
+  width: 100vw;           /* Ocupa el 100% del ancho de la ventana */
+  height: 100vh;          /* Ocupa el 100% de la altura de la ventana */
+  background-color: rgba(0, 0, 0, 0.3); /* Fondo semi-transparente */
+  -webkit-backdrop-filter: blur(3px); /* Para Safari */
+  backdrop-filter: blur(3px);          /* Para otros navegadores modernos */
+  display: flex;          /* Utiliza flexbox */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  z-index: 1000;          /* Asegura que esté por encima de otros elementos */
+}
+
+.modal-contenido {
+  background-color: #fff;   /* Fondo blanco */
+  padding: 30px;             /* Relleno interno */
+  border-radius: 12px;      /* Bordes redondeados */
+  text-align: center;       /* Centra el texto */
+  max-width: 400px;        /* Ancho máximo de 400px */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* Sombra */
+  font-size: 1.2rem;       /* Tamaño de la fuente */
+}
+
+.modal-contenido button {
+  margin-top: 20px;        /* Margen superior */
+  padding: 10px 20px;       /* Relleno interno */
+  font-size: 1rem;         /* Tamaño de la fuente */
+  border: none;              /* Sin borde */
+  border-radius: 8px;       /* Bordes redondeados */
+  background-color: #aac4b2; /* Color de fondo verde claro */
+  color: white;             /* Color de texto blanco */
+  cursor: pointer;           /* Cambia el cursor a una mano */
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+.modal-contenido button:hover {
+  background-color: #8da897; /* Color de fondo verde al pasar el ratón */
+}
+
+/* Estilos para la barra de filtros para mes y semana*/
+.barra-filtros {
+  display: flex;             /* Utiliza flexbox */
+  gap: 5px;                /* Espacio entre elementos */
+  flex-wrap: nowrap;        /* Evita que los elementos se envuelvan */
+  margin-bottom: 20px;     /* Margen inferior */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.barra-filtros label {
+  font-size: 1rem;         /* Tamaño de la fuente */
+  display: flex;          /* Utiliza flexbox */
+  align-items: center;     /* Centra verticalmente */
+  gap: 8px;                /* Espacio entre elementos */
+  white-space: nowrap;     /* Evita que el texto se envuelva */
+}
+
+.barra-filtros select,
+.barra-filtros button {
+  padding: 8px 12px;        /* Relleno interno */
+  font-size: 1rem;         /* Tamaño de la fuente */
+  border-radius: 8px;       /* Bordes redondeados */
+  border: 1px solid #ccc; /* Borde gris claro */
+  max-width: 100%;
+  
+}
+
+.barra-filtros button {
+  background-color: #aac4b2; /* Color de fondo verde claro */
+  color: white;             /* Color de texto blanco */
+  border: none;              /* Sin borde */
+  cursor: pointer;           /* Cambia el cursor a una mano */
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+.barra-filtros button:hover {
+  background-color: #8da897; /* Color de fondo verde al pasar el ratón */
+}
+
+.login-container{
+  margin: 0 auto;
+  background-color: white;
+  padding: 10px;
+  border: 50px;
+  border-radius: 10px;
+  width: 100%;     
+  max-width: 600px;
+}
+.login-container button{
+  width: 49%;
+  margin-top: 10px;
+}
+.login-container h2{
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.login-usuario img{
+  display: flex;
+  margin: 20px auto;
+  width: 15%;
+}
+.login-usuario button.cancelar-edicion{
+  width: 100%;
+}
+
+.error-usuario {
+  background: #ffe0e0;
+  color: #b71c1c;
+  border-left: 5px solid #b71c1c;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.error-contraseña {
+  background: #fff3cd;
+  color: #856404;
+  border-left: 5px solid #856404;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.error-bloqueada {
+  background: #e3f2fd;
+  color: #1565c0;
+  border-left: 5px solid #1565c0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.notificacion{
+  background:#e0ffe0;padding:10px;border-radius:7px;color:#333;
+  margin: 15px auto;
+}

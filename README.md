@@ -1,27 +1,28 @@
-# 🎓 Aplicación Web - Registro de asistencia (PWA)
+# 🎓 Aplicación Web - Registro de asistencia
 
-Aplicación web progresiva (PWA) que permite registrar asistencias académicas de forma **offline** y sincronizar los datos posteriormente. Su diseño simple y enfocado permite al usuario gestionar materias, registrar asistencias y consultar resúmenes sin conexión a internet.
+Aplicación web que permite registrar asistencias académicas de forma intuitiva y eficiente. Permite a los usuarios gestionar materias, registrar asistencias por día y hora, y consultar resúmenes, todo respaldado en **PHP y MySQL** para garantizar integridad y multiusuario.
 
 ---
 
 ## 🌐 Acceso rápido al sistema
+
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="refresh" content="0; url=Registro de Asistencia/index.html" />
+    <meta http-equiv="refresh" content="0; url=Registro de Asistencia/index.php" />
   </head>
   <body>
-    <p>Redirigiendo a <a href="Registro de Asistencia/index.html">Registro de Asistencia/index.html</a></p>
+    <p>Redirigiendo a <a href="Registro de Asistencia/index.php">Registro de Asistencia/index.php</a></p>
   </body>
 </html>
+
+---
 
 ## 🧩 Tecnologías utilizadas
 
 - **Lenguajes:** HTML5, CSS3, JavaScript  
-- **Backend (planificado):** PHP  
+- **Backend:** PHP  
 - **Base de datos:** MySQL 
-- **PWA:** Service Worker + manifest.json  
-- **Almacenamiento temporal:** `localStorage` (modo offline)  
 - **Control de versiones:** Git + GitHub  
 
 ---
@@ -32,23 +33,22 @@ Aplicación web progresiva (PWA) que permite registrar asistencias académicas d
    ```bash
    git clone https://github.com/Alejandro-Leon24/Proyecto-web.git
    ```
-2. Abre el proyecto en **Visual Studio Code** o tu editor preferido.
-3. Abre el archivo `index.html` directamente en tu navegador o utiliza la extensión **Live Server**.
-4. Accede a la aplicación desde `index.html`.
-
-✅ Una vez cargada por primera vez, se puede utilizar completamente **sin conexión** gracias al Service Worker.
+2. Configura tu servidor local (**XAMPP**) y asegúrate de tener PHP y MySQL corriendo.
+3. Crea la base de datos en MySQL e importa el script de estructura y datos iniciales (ej: `database.sql`).
+4. Configura la conexión a la base de datos en `Config/database.php` según tus datos locales.
+5. Ingresa a la aplicación desde `Registro de Asistencia/index.php` en tu navegador.
 
 ---
 
 ## ✨ Características
 
 - ✅ Registro de materias con horarios y días configurables
-- ✅ Registro de asistencias con validación por día y hora
-- ✅ Vista de resumen con observaciones según asistencia acumulada
+- ✅ Registro y consulta de asistencias por día y hora
 - ✅ Filtro de asistencias por **mes** y **semana**
 - ✅ Botón de **cancelar edición** en materias
-- ✅ Funcionalidad **offline total** (como app instalada o sin internet)
-- ✅ Preparado para sincronización futura con base de datos remota
+- ✅ Multiusuario: cada usuario ve solo sus datos
+- ✅ Sincronización y respaldo de datos en MySQL
+- ✅ Interfaz clara y responsiva
 
 ---
 
@@ -59,3 +59,5 @@ Aplicación web progresiva (PWA) que permite registrar asistencias académicas d
 - **LEON SALAZAR XAVIER ALEJANDRO**
 - **MEHLER CASTRO NATASHA VICTORIA**
 - **MONAR ZAMBRANO NOHELYA CAROLINA**
+
+---

@@ -5,132 +5,218 @@ export function initRegistroAsistencia() {
     const mensajeElement = document.querySelector("p");
     const form = document.getElementById("form-asistencia");
 
-    function actualizarVistaAsistencia() {
+    async function actualizarVistaAsistencia() {
         const ahora = new Date();
         const diaActual = quitarAcentos(
             ahora.toLocaleDateString("es-ES", { weekday: "long" }).toLowerCase()
         );
         const horaActual = ahora.getHours() + ahora.getMinutes() / 60;
 
-        const materias = JSON.parse(localStorage.getItem("materias")) || [];
-        const asistencias = JSON.parse(localStorage.getItem("asistencias")) || [];
+        try {
+            const response = await fetch(`Controlador/AsistenciaController.php?dia=${diaActual}`);
 
-        // Buscar materia y horario correspondiente
-        let materiaActual = null;
-        let horarioActual = null;
-        let siguientes = [];
-
-        for (let m of materias) {
-            if (!m.horarios) continue;
-            for (let h of m.horarios) {
-                if (h.dia === diaActual) {
-                    const hInicio = convertirAHorasDecimal(h.hora_inicio);
-                    const hFin = convertirAHorasDecimal(h.hora_fin);
-                    if (horaActual >= hInicio && horaActual <= hFin) {
-                        materiaActual = m;
-                        horarioActual = h;
-                    } else if (hInicio > horaActual) {
-                        siguientes.push({ materia: m, horario: h });
-                    }
-                }
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
             }
-        }
 
-        siguientes.sort((a, b) =>
-            convertirAHorasDecimal(a.horario.hora_inicio) - convertirAHorasDecimal(b.horario.hora_inicio)
-        );
+            const materiasHoy = await response.json();
 
-        function mensajeSiguienteClase() {
-            if (siguientes.length > 0) {
-                const siguiente = siguientes[0];
-                const mins = Math.round((convertirAHorasDecimal(siguiente.horario.hora_inicio) - horaActual) * 60);
-                const horas = Math.floor(mins / 60);
-                const minutos = mins % 60;
-                return `Tu siguiente clase, <b>${siguiente.materia.nombre}</b>, comienza en ${horas > 0 ? `${horas}h ` : ""}${minutos} minutos (${siguiente.horario.hora_inicio}).`;
-            } else {
-                return `No tienes más clases pendientes por hoy.`;
-            }
-        }
-
-        // Sin clase actual
-        if (!materiaActual || !horarioActual) {
-            spanMateria.textContent = "______";
-            mensajeElement.innerHTML = "No tienes clase en esta hora.<br>" + mensajeSiguienteClase();
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                mostrarMensajePersonalizado("No puedes registrar asistencia si no tienes clase ahora.");
-            };
-            return;
-        }
-
-        // Clase actual: ¿Ya registrada?
-        const yaRegistrada = asistencias.some(a => {
-            const fecha = new Date(a.fecha);
-            return (
-                a.materiaId === materiaActual.id &&
-                a.dia === diaActual &&
-                fecha.toDateString() === ahora.toDateString()
-            );
-        });
-
-        spanMateria.textContent = materiaActual.nombre;
-
-        if (yaRegistrada) {
-            mensajeElement.innerHTML = `Ya registraste asistencia para la clase de <b>${materiaActual.nombre}</b>.<br>${mensajeSiguienteClase()}`;
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                mostrarMensajePersonalizado(`Ya registraste asistencia para la clase de ${materiaActual.nombre}.`);
-            };
-            return;
-        }
-
-        // Si aún no se ha registrado asistencia
-        mensajeElement.innerHTML = `¿Ya asististe a la clase <span id="nombre-materia">${materiaActual.nombre}</span>?`;
-        form.onsubmit = (e) => {
-            e.preventDefault();
-            const seleccion = form.querySelector("input[name='asistio']:checked");
-            if (!seleccion) {
-                mostrarMensajePersonalizado("Debes seleccionar si asististe o no.");
+            if (materiasHoy.error) {
+                mostrarMensajePersonalizado(materiasHoy.error);
                 return;
             }
 
-            // Verifica de nuevo por si acaso (anti doble click)
-            const asistenciasActualizadas = JSON.parse(localStorage.getItem("asistencias")) || [];
-            const yaRegistradaAhora = asistenciasActualizadas.some(a => {
+            // Buscar materia actual (clase en curso)
+            let materiaActual = null;
+            for (let m of materiasHoy) {
+                const hInicio = convertirAHorasDecimal(m.hora_inicio);
+                const hFin = convertirAHorasDecimal(m.hora_fin);
+                if (horaActual >= hInicio && horaActual <= hFin) {
+                    materiaActual = m;
+                    break;
+                }
+            }
+
+            // Buscar siguientes clases
+            const siguientes = materiasHoy
+                .filter(m => convertirAHorasDecimal(m.hora_inicio) > horaActual)
+                .sort((a, b) => convertirAHorasDecimal(a.hora_inicio) - convertirAHorasDecimal(b.hora_inicio));
+
+            function obtenerMensajeSiguienteClase() {
+                if (siguientes.length > 0) {
+                    const siguiente = siguientes[0];
+                    const mins = Math.round((convertirAHorasDecimal(siguiente.hora_inicio) - horaActual) * 60);
+
+                    if (mins <= 0) {
+                        return `¡Tu siguiente clase, <b>${siguiente.nombre}</b>, ya empezó a las ${siguiente.hora_inicio}!`;
+                    } else if (mins <= 5) {
+                        return `¡Tu siguiente clase, <b>${siguiente.nombre}</b>, empieza en ${mins} minutos (${siguiente.hora_inicio})! 🕐`;
+                    } else if (mins <= 30) {
+                        return `Tu siguiente clase, <b>${siguiente.nombre}</b>, empieza en ${mins} minutos (${siguiente.hora_inicio}).`;
+                    } else {
+                        const horas = Math.floor(mins / 60);
+                        const minutosRestantes = mins % 60;
+                        if (horas > 0) {
+                            return `Tu siguiente clase, <b>${siguiente.nombre}</b>, es en ${horas}h ${minutosRestantes}min (${siguiente.hora_inicio}).`;
+                        } else {
+                            return `Tu siguiente clase, <b>${siguiente.nombre}</b>, es en ${mins} minutos (${siguiente.hora_inicio}).`;
+                        }
+                    }
+                } else {
+                    return `🎉 No tienes más clases pendientes por hoy. ¡Disfruta tu tiempo libre!`;
+                }
+            }
+
+            // **CASO 1: SIN CLASE ACTUAL**
+            if (!materiaActual) {
+                spanMateria.textContent = "______";
+
+                if (siguientes.length > 0) {
+                    const siguiente = siguientes[0];
+                    const mins = Math.round((convertirAHorasDecimal(siguiente.hora_inicio) - horaActual) * 60);
+
+                    if (mins <= 10) {
+                        mensajeElement.innerHTML = `⏰ <b>¡Prepárate!</b> Tu clase de <b>${siguiente.nombre}</b> empieza en ${mins} minutos.<br><small>No tienes clase en este momento, pero pronto empezará la siguiente.</small>`;
+                    } else {
+                        mensajeElement.innerHTML = `📅 No tienes clase en este momento.<br>${obtenerMensajeSiguienteClase()}`;
+                    }
+                } else {
+                    mensajeElement.innerHTML = `📅 No tienes clase en este momento.<br>🎉 No tienes más clases pendientes por hoy. ¡Disfruta tu tiempo libre!`;
+                }
+
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    mostrarMensajePersonalizado("⚠️ No puedes registrar asistencia porque no tienes clase en este momento.");
+                };
+                return;
+            }
+
+            // **CASO 2: HAY CLASE ACTUAL**
+            spanMateria.textContent = materiaActual.nombre;
+
+            // Verificar si ya está registrada
+            const asistenciasLocal = JSON.parse(localStorage.getItem("asistencias")) || [];
+            const yaRegistrada = asistenciasLocal.some(a => {
                 const fecha = new Date(a.fecha);
                 return (
-                    a.materiaId === materiaActual.id &&
+                    a.materiaId == materiaActual.id &&
                     a.dia === diaActual &&
                     fecha.toDateString() === ahora.toDateString()
                 );
             });
-            if (yaRegistradaAhora) {
-                mostrarMensajePersonalizado(`Ya registraste asistencia para la clase de ${materiaActual.nombre}.`);
-                actualizarVistaAsistencia(); // Refresca la vista
+
+            if (yaRegistrada) {
+                // **CASO 2A: ASISTENCIA YA REGISTRADA**
+                const asistenciaRegistrada = asistenciasLocal.find(a => {
+                    const fecha = new Date(a.fecha);
+                    return (
+                        a.materiaId == materiaActual.id &&
+                        a.dia === diaActual &&
+                        fecha.toDateString() === ahora.toDateString()
+                    );
+                });
+
+                const estadoAsistencia = asistenciaRegistrada?.asistio === "si" ? "✅ <b>Sí asististe</b>" : "❌ <b>No asististe</b>";
+
+                mensajeElement.innerHTML = `
+                    📝 Asistencia para <b>${materiaActual.nombre}</b> ya registrada: ${estadoAsistencia}<br>
+                    ${obtenerMensajeSiguienteClase()}
+                `;
+
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    mostrarMensajePersonalizado(`ℹ️ Ya registraste tu asistencia para <b>${materiaActual.nombre}</b> como: ${asistenciaRegistrada?.asistio === "si" ? "Sí asististe" : "No asististe"}.`);
+                };
                 return;
             }
 
-            // Guardar asistencia
-            asistenciasActualizadas.push({
-                materiaId: materiaActual.id,
-                materiaNombre: materiaActual.nombre,
-                dia: diaActual,
-                hora_inicio: horarioActual.hora_inicio,
-                hora_fin: horarioActual.hora_fin,
-                fecha: new Date().toISOString(),
-                asistio: seleccion.value
-            });
-            localStorage.setItem("asistencias", JSON.stringify(asistenciasActualizadas));
-            form.reset();
+            // **CASO 2B: CLASE ACTUAL SIN REGISTRAR**
+            const tiempoRestante = Math.round((convertirAHorasDecimal(materiaActual.hora_fin) - horaActual) * 60);
+            let mensajeClaseActual = `📚 Tienes clase de <b>${materiaActual.nombre}</b> en curso`;
 
-            // Mensaje claro y actualizado
-            mostrarMensajePersonalizado(
-                `¡Asistencia para <b>${materiaActual.nombre}</b> registrada como: <b>${seleccion.value === "si" ? "Sí" : "No"}</b>!<br>${mensajeSiguienteClase()}`
-            );
+            if (tiempoRestante > 30) {
+                mensajeClaseActual += ` (termina en ${Math.floor(tiempoRestante / 60)}h ${tiempoRestante % 60}min)`;
+            } else if (tiempoRestante > 0) {
+                mensajeClaseActual += ` (termina en ${tiempoRestante} minutos)`;
+            } else {
+                mensajeClaseActual += ` (ya terminó)`;
+            }
 
-            // Refresca la vista (para que el mensaje de fondo también cambie)
-            setTimeout(actualizarVistaAsistencia, 300);
-        };
+            mensajeElement.innerHTML = `${mensajeClaseActual}.<br>❓ <b>¿Ya asististe a esta clase?</b>`;
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const seleccion = form.querySelector("input[name='asistio']:checked");
+                if (!seleccion) {
+                    mostrarMensajePersonalizado("⚠️ Debes seleccionar si asististe o no.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch('Controlador/AsistenciaController.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `materia_id=${materiaActual.id}&asistio=${seleccion.value}&dia=${diaActual}&hora_inicio=${materiaActual.hora_inicio}&hora_fin=${materiaActual.hora_fin}`
+                    });
+
+                    const result = await response.json();
+
+                    if (result.error) {
+                        mostrarMensajePersonalizado("❌ " + result.error);
+                        return;
+                    }
+
+                    // Guardar en localStorage
+                    const asistenciasLocal = JSON.parse(localStorage.getItem("asistencias")) || [];
+                    asistenciasLocal.push({
+                        materiaId: materiaActual.id,
+                        materiaNombre: materiaActual.nombre,
+                        dia: diaActual,
+                        hora_inicio: materiaActual.hora_inicio,
+                        hora_fin: materiaActual.hora_fin,
+                        fecha: new Date().toISOString(),
+                        asistio: seleccion.value
+                    });
+                    localStorage.setItem("asistencias", JSON.stringify(asistenciasLocal));
+
+                    form.reset();
+
+                    // **MENSAJE DINÁMICO DESPUÉS DE REGISTRAR**
+                    const estadoRegistrado = seleccion.value === "si" ? "✅ Sí asististe" : "❌ No asististe";
+                    const mensajeSiguiente = obtenerMensajeSiguienteClase();
+
+                    mostrarMensajePersonalizado(
+                        `🎉 ¡Asistencia registrada correctamente!<br><br>
+                        📚 <b>${materiaActual.nombre}</b>: ${estadoRegistrado}<br><br>
+                        ${mensajeSiguiente}`
+                    );
+
+                    // **ACTUALIZAR LA VISTA DESPUÉS DEL REGISTRO**
+                    setTimeout(() => {
+                        spanMateria.textContent = materiaActual.nombre;
+                        mensajeElement.innerHTML = `
+                            📝 Asistencia para <b>${materiaActual.nombre}</b> registrada: ${estadoRegistrado}<br>
+                            ${mensajeSiguiente}
+                        `;
+
+                        // Cambiar el comportamiento del formulario
+                        form.onsubmit = (e) => {
+                            e.preventDefault();
+                            mostrarMensajePersonalizado(`ℹ️ Ya registraste tu asistencia para <b>${materiaActual.nombre}</b> como: ${seleccion.value === "si" ? "Sí asististe" : "No asististe"}.`);
+                        };
+                    }, 300);
+
+                } catch (error) {
+                    mostrarMensajePersonalizado("❌ Error al registrar asistencia. Verifica tu conexión.");
+                    console.error('Error:', error);
+                }
+            };
+
+        } catch (error) {
+            console.error("Error de conexión:", error);
+            spanMateria.textContent = "______";
+            mensajeElement.innerHTML = "❌ Error de conexión. Verifica tu internet e intenta recargar la página.";
+        }
     }
 
     // Llamar al cargar la página

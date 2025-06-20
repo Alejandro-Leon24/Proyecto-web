@@ -4,21 +4,6 @@ Aplicación web para registrar y consultar asistencias académicas de manera efi
 
 ---
 
-## 🌐 Acceso rápido al sistema
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=Registro de Asistencia/index.php" />
-  </head>
-  <body>
-    <p>Redirigiendo a <a href="Registro de Asistencia/index.php">Registro de Asistencia/index.php</a></p>
-  </body>
-</html>
-```
-
----
 
 ## 🧩 Tecnologías utilizadas
 

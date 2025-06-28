@@ -20,16 +20,16 @@ require_once __DIR__ . '/../Controlador/CrearCuentaController.php';
     <div class="login-container">
         <h2>Crear Cuenta</h2>
         <form method="post">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <label for="nombre" style="font-weight: bold;">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre completo" required>
 
-            <label for="correo">Correo</label>
-            <input type="email" id="correo" name="correo" required>
+            <label for="correo" style="font-weight: bold;">Correo</label>
+            <input type="email" id="correo" name="correo" placeholder="correo@gmail.com" required>
 
-            <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contraseña" required minlength="6">
+            <label for="contraseña" style="font-weight: bold;">Contraseña</label>
+            <input type="password" id="contraseña" name="contraseña" placeholder="********" required minlength="6">
 
-            <label for="fechaNacimiento">Fecha de Nacimiento</label>
+            <label for="fechaNacimiento" style="font-weight: bold;">Fecha de Nacimiento</label>
             <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
 
             <div>

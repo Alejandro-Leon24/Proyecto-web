@@ -14,7 +14,7 @@ function verificarSesionObligatoria(paginaActual) {
     // Ejemplo: <script>window.usuarioLogeado = true;</script>
     if (typeof window.usuarioLogeado === "undefined" || !window.usuarioLogeado) {
         // Exceptuamos páginas de login y crear cuenta
-        if (!["Login.php", "Crear-Cuenta.php"].includes(paginaActual)) {
+        if (!["Login.php", "Crear-Cuenta.php", "Cambiar.php"].includes(paginaActual)) {
             mostrarMensajePersonalizado("Debes iniciar sesión antes de realizar cualquier acción.");
             setTimeout(() => {
                 if(["index.php"].includes(paginaActual)){
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const menu = document.getElementById("menu-desplegable");
     if (menuBtn && menu) {
         menuBtn.addEventListener("click", () => {
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
+            menu.style.display = menu.style.display === "flex" ? "none" : "flex";
         });
         // Cerrar menú si se hace click fuera
         document.addEventListener("click", (e) => {
@@ -82,13 +82,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const radios = asistenciaForm.querySelectorAll("input[type=radio]");
         radios.forEach(radio => {
             const label = radio.parentElement;
-            label.style.fontSize = "1.5rem";
+            label.style.fontSize = "2rem";
             label.style.display = "inline-block";
             label.style.margin = "10px";
             if (radio.value === "si") {
-                label.innerHTML = `<input type="radio" name="asistio" value="si" required> ✔ Asistí`;
+                label.innerHTML = `<input type="radio" name="asistio" value="si" required> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="none" stroke="#006529" stroke-dasharray="24" stroke-dashoffset="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 11l6 6l10 -10"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.28s" values="24;0"/></path></svg>
+                Asistí`;
             } else if (radio.value === "no") {
-                label.innerHTML = `<input type="radio" name="asistio" value="no" required> ✘ No asistí`;
+                label.innerHTML = `<input type="radio" name="asistio" value="no" required> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="none" stroke="#dd1b1b" stroke-dasharray="12" stroke-dashoffset="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.21s" values="12;0"/></path></svg>
+                No asistí`;
             }
         });
     }

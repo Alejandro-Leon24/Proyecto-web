@@ -8,7 +8,7 @@
 
 /* Estilos generales del cuerpo */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Establece la fuente principal */
+  font-family: 'Roboto', sans-serif; /* Establece la fuente principal */
   background-color: #f5f5f5;  /* Color de fondo gris claro */
   color: #333;               /* Color de texto gris oscuro */
   display: flex;            /* Utiliza flexbox para el diseño */
@@ -53,7 +53,7 @@ input[type="password"],
 input[type="email"],
 input[type="date"],
 select {
-  padding: 10px;        /* Relleno interno */
+  padding: 12px;        /* Relleno interno */
   font-size: 1.1rem;    /* Tamaño de la fuente */
   border-radius: 8px;   /* Bordes redondeados */
   border: 1px solid #ccc; /* Borde gris claro */
@@ -91,12 +91,46 @@ button.boton-confirmar:hover{
   background-color: #6eb383;
 }
 
+button.iniciar-sesion {
+  background-color: #0866ff; /* Rojo pálido */
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  gap: 5px;
+  align-items: center;
+  width: 49%;
+
+  font-weight: 700;
+}
+
+button.iniciar-sesion:hover {
+  background-color: #1877f2;   /* Rojo más encendido */
+}
+button.crear-sesion {
+  background-color: #E5E7EB; /* Rojo pálido */            /* Rojo más oscuro para el texto */
+  font-weight: 700;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  width: 49%;
+  gap: 5px;
+}
+button.crear-sesion:hover {
+  background-color: rgb(209 213 219);
+}
+
+
 /* Estilos para el menú hamburguesa */
 nav {
   width: 100%;          /* Ocupa el 100% del ancho */
   max-width: 600px;      /* Ancho máximo de 600px */
   margin-bottom: 20px;   /* Margen inferior */
   z-index: 1;            /* Asegura que el menú esté por encima de otros elementos */
+}
+ul{
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 
 #menu-btn {
@@ -125,19 +159,28 @@ nav {
 }
 
 #menu-desplegable li {
+  width: 90%;          /* Ocupa el 90% del ancho */
   padding: 10px 20px;     /* Relleno interno */
-  text-align: center;       /* Centra el texto */
+  display: flex;
+  justify-content: center; /* Centra horizontalmente los elementos */
+}
+
+#menu-desplegable li:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#menu-desplegable li:hover {
+  background-color: #f5f5f5;
+  color: #000;
+  font-weight: bold;
+  border-radius: 10px;       /* Bordes redondeados */
+  cursor: pointer;
 }
 
 #menu-desplegable li a {
   text-decoration: none; /* Elimina el subrayado de los enlaces */
   font-size: 1.2rem;    /* Tamaño de la fuente */
   color: #444;           /* Color de texto gris oscuro */
-}
-
-#menu-desplegable li a:hover {
-  color: #000;           /* Color de texto negro al pasar el ratón */
-  font-weight: bold;     /* Texto en negrita al pasar el ratón */
 }
 
 /* Animación para el menú desplegable */
@@ -159,7 +202,7 @@ nav {
 
 /* Estilos para tablas */
 table {
-  width: 100%;/* Ocupa el 100% del ancho */
+  border: 1px solid #ccc; /* Borde gris claro */
   border-collapse: collapse; /* Colapsa los bordes de las celdas */
   background-color: #fff;   /* Fondo blanco */
   border-radius: 10px;      /* Bordes redondeados */
@@ -241,10 +284,6 @@ td, th {
 
 /* Estilos para la barra de filtros para mes y semana*/
 .barra-filtros {
-  display: flex;             /* Utiliza flexbox */
-  gap: 5px;                /* Espacio entre elementos */
-  flex-wrap: nowrap;        /* Evita que los elementos se envuelvan */
-  margin-bottom: 20px;     /* Margen inferior */
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
@@ -270,7 +309,6 @@ td, th {
 }
 
 .barra-filtros button {
-  background-color: #aac4b2; /* Color de fondo verde claro */
   color: white;             /* Color de texto blanco */
   border: none;              /* Sin borde */
   cursor: pointer;           /* Cambia el cursor a una mano */
@@ -301,13 +339,19 @@ td, th {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.login-usuario img{
-  display: flex;
-  margin: 20px auto;
-  width: 15%;
+
+.login-usuario p{
+  text-align: start;
 }
 .login-usuario button.cancelar-edicion{
   width: 100%;
+}
+.info-usuario{
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .error-usuario {
@@ -337,4 +381,32 @@ td, th {
 .notificacion{
   background:#e0ffe0;padding:10px;border-radius:7px;color:#333;
   margin: 15px auto;
+}
+.asistencia{
+  font-weight: 700;
+  padding: 10px 0 10px 20px; /* Relleno interno */
+}
+input[type="radio"] {
+  /* display: none; /* Oculta los botones de radio */
+  transform: translateY(-5px) scale(2); /* Aumenta el tamaño del círculo */
+  margin-top: 5px;
+}
+.asistencia:hover{
+  cursor: pointer; /* Cambia el cursor a una mano al pasar por encima */
+}
+@media (max-width: 600px) {
+  
+  button.iniciar-sesion, button.crear-sesion {
+    width: 100%;         /* Botones ocupan el 100% del ancho */
+  }
+  .contenedor-tabla{
+    overflow-y: auto; /* Permite el desplazamiento vertical */
+    max-width: 660px; /* Ancho máximo de la tabla */
+  }
+}
+#cerrar-sesion-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }

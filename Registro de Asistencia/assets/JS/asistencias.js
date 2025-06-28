@@ -333,7 +333,9 @@ export function initTablaAsistencias() {
                 materiasAgrupadas[nombreMateria][diaSinAcentos].push({
                     fecha,
                     horario: `${horaIni} - ${horaFin}`,
-                    icono: a.asistio === "si" ? "✔" : "✘"
+                    icono: a.asistio === "si" ? 
+                    "<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 24 24'><path fill='none' stroke='#006529' stroke-dasharray='24' stroke-dashoffset='24' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M5 11l6 6l10 -10'><animate fill='freeze' attributeName='stroke-dashoffset' dur='0.28s' values='24;0'/></path></svg>" : 
+                    "<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 24 24'><path fill='none' stroke='#dd1b1b' stroke-dasharray='12' stroke-dashoffset='12' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7'><animate fill='freeze' attributeName='stroke-dashoffset' dur='0.21s' values='12;0'/></path></svg>"
                 });
             }
         });

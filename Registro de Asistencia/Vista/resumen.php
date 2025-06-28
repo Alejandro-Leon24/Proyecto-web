@@ -7,7 +7,7 @@ require_once __DIR__ . '/../Controlador/ResumenController.php';
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=720, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../assets/CSS/estilos.css">
     <script>
         window.usuarioLogeado = true;
@@ -26,36 +26,32 @@ require_once __DIR__ . '/../Controlador/ResumenController.php';
         <?php if (empty($resumen)): ?>
             <div id="mensaje-resumen-vacio">Por ahora no hay asistencias registradas.</div>
         <?php else: ?>
-            <table border="1">
-                <thead>
-                    <tr id="encabezado-resumen">
-                        <th>Materia</th>
+            <div>
+                <table border="1" style="margin-bottom: 20px">
+                    <thead>
+                        <tr id="encabezado-resumen">
+                            
+                            <th>Materia</th>
+                            <th>Asistencias</th>
+                            <th>Total clases</th>
+                            <th>% Asistencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         <?php foreach ($resumen as $r): ?>
-                            <th><?= htmlspecialchars($r['materia']); ?></th>
+                            <tr>
+                                
+                                <td><?= htmlspecialchars($r['materia']); ?></td>
+                                <td><?= (int)$r['asistencias_si']; ?></td>
+                                <td><?= (int)$r['total_clases']; ?></td>
+                                <td>
+                                    <?= ($r['total_clases'] > 0) ? round(($r['asistencias_si'] / $r['total_clases']) * 100) . '%' : '0%' ?>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
-                    </tr>
-                    <tr id="totales-resumen">
-                        <th>Asistencias</th>
-                        <?php foreach ($resumen as $r): ?>
-                            <td><?= (int)$r['asistencias_si']; ?></td>
-                        <?php endforeach; ?>
-                    </tr>
-                    <tr id="clases-resumen">
-                        <th>Total clases</th>
-                        <?php foreach ($resumen as $r): ?>
-                            <td><?= (int)$r['total_clases']; ?></td>
-                        <?php endforeach; ?>
-                    </tr>
-                    <tr id="porcentaje-resumen">
-                        <th>% Asistencia</th>
-                        <?php foreach ($resumen as $r): ?>
-                            <td>
-                                <?= ($r['total_clases'] > 0) ? round(($r['asistencias_si'] / $r['total_clases']) * 100) . '%' : '0%' ?>
-                            </td>
-                        <?php endforeach; ?>
-                    </tr>
-                </thead>
-            </table>
+                    </tbody>
+                </table>
+            </div>
             <p id="reporte-asistencia">
                 <?php
                 $materiasBajas = [];

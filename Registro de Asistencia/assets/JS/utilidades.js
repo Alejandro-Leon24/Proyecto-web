@@ -7,7 +7,7 @@ export function mostrarMensajePersonalizado(mensaje) {
     <div class="modal-fondo"></div>
     <div class="modal-contenido">
       <p>${mensaje}</p>
-      <button id="cerrar-modal">Aceptar</button>
+      <button class="boton-confirmar" id="cerrar-modal">Aceptar</button>
     </div>
   `;
     document.body.appendChild(modal);

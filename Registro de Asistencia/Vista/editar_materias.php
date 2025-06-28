@@ -24,7 +24,7 @@ $mensaje = Materia::mensajeGET($_GET);
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=650, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registro de Asistencia</title>
     <link rel="stylesheet" href="../assets/CSS/estilos.css">
 </head>
@@ -36,7 +36,7 @@ $mensaje = Materia::mensajeGET($_GET);
     ?>
     <!-- Contenedor principal donde inyectamos contenido -->
     <main>
-        <h1>Editar materias</h1>
+        <h1 style="margin: 0;">Editar materias</h1>
 
         <div class="contenedor-editar-materias">
             <!-- Tabla -->
@@ -73,15 +73,18 @@ $mensaje = Materia::mensajeGET($_GET);
                                 <td><?= implode("<br>", array_map('htmlspecialchars', $horas)) ?></td>
                                 <td><?= htmlspecialchars($m['profesor']) ?></td>
                                 <td>
-                                    <form method="post" action="../Controlador/MateriaController.php" style="display:inline;">
+                                    <form method="post" action="../Controlador/MateriaController.php" style="display:inline; padding: 0;">
                                         <input type="hidden" name="accion" value="eliminar">
                                         <input type="hidden" name="materia_id" value="<?= $m['id'] ?>">
-                                        <button type="submit" class="cancelar-edicion" onclick="return confirm('¿Seguro que deseas eliminar esta materia?')">&#x2716;</button>
+                                        <button type="submit" style="background: none;padding: 8px;" class="eliminar-materia" onclick="return confirm('¿Seguro que deseas eliminar esta materia?')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><g fill="none" stroke="#e40000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="24" stroke-dashoffset="24" d="M12 20h5c0.5 0 1 -0.5 1 -1v-14M12 20h-5c-0.5 0 -1 -0.5 -1 -1v-14"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.2s" values="24;0"/></path><path stroke-dasharray="20" stroke-dashoffset="20" d="M4 5h16"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.2s" dur="0.1s" values="20;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M10 4h4M10 9v7M14 9v7"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.1s" values="8;0"/></path></g></svg>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+                    <caption style="margin: 10px; font-weight: normal; opacity: 0.6;">Selecciona una fila de la tabla para editar la materia</caption>
                 </table>
             </div>
             <!-- Formulario -->
@@ -114,8 +117,8 @@ $mensaje = Materia::mensajeGET($_GET);
                     <label>Profesor:<br>
                         <input type="text" name="profesor" id="profesor" required>
                     </label>
-                    <button type="submit" class="boton-confirmar">Confirmar</button>
-                    <button type="button" class="cancelar-edicion" id="cancelar-btn">Cancelar</button>
+                    <button type="submit" class="boton-confirmar" style="font-weight: 500;">Confirmar</button>
+                    <button type="button" class="cancelar-edicion" id="cancelar-btn" style="font-weight: 500;">Cancelar</button>
                 </form>
             </div>
         </div>

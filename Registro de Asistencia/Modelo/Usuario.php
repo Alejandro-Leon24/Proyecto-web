@@ -31,5 +31,18 @@ class Usuario {
         $sql = "UPDATE usuarios SET intentos_fallidos = 0, bloqueado_hasta = NULL WHERE id = ?";
         $Conexion->prepare($sql)->execute([$usuarioId]);
     }
+    public static function buscarUsuario($correo, $fechaNacimiento) {
+        global $Conexion;
+        $sql = "SELECT * FROM usuarios WHERE correo = ? AND fecha_nacimiento = ?";
+        $stmt = $Conexion->prepare($sql);
+        $stmt->execute([$correo, $fechaNacimiento]);
+        return $stmt->fetch();
+    }
+    public static function cambiarContraseña($correo, $nuevaContraseña) {
+        global $Conexion;
+        $sql = "UPDATE usuarios SET contrasena = ? WHERE correo = ?";
+        $stmt = $Conexion->prepare($sql);
+        return $stmt->execute([password_hash($nuevaContraseña, PASSWORD_DEFAULT), $correo]);
+    }
 }
 ?>

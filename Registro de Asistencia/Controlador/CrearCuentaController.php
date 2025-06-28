@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../Modelo/Usuario.php';
 
 $mensaje = "";
+$mensaje2 = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['crear'])) {
     $nombre = trim($_POST['nombre'] ?? '');
@@ -25,6 +26,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['crear'])) {
             exit;
         } else {
             $mensaje = "Error al crear la cuenta. Intenta nuevamente.";
+        }
+    }
+}
+
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recuperar'])){
+    $correo = trim($_POST['email'] ?? '');
+    $fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
+
+    if (!$correo || !$fechaNacimiento) {
+        $mensaje = "El correo y la fecha de nacimiento son obligatorios.";
+    } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $mensaje = "El correo no es válido.";
+    } else {
+        $usuario = Usuario::buscarUsuario($correo, $fechaNacimiento);
+        if ($usuario) {
+            $mensaje = "Usuario encontrado. Puedes proceder a cambiar tu contraseña.";
+        } else {
+            $mensaje = "No se encontró un usuario con ese correo y fecha de nacimiento.";
+        }
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cambiar'])) {
+    $correo = trim($_POST['email_recuperado'] ?? '');
+    $nuevaContraseña = $_POST['nuevaContraseña'] ?? '';
+
+    if (!$correo || !$nuevaContraseña) {
+        $mensaje2 = "El correo y la nueva contraseña son obligatorios.";
+    } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $mensaje2 = "El correo no es válido.";
+    } elseif (strlen($nuevaContraseña) < 6) {
+        $mensaje2 = "La nueva contraseña debe tener al menos 6 caracteres.";
+    } else {
+        $resultado = Usuario::cambiarContraseña($correo, $nuevaContraseña);
+        if ($resultado) {
+            $mensaje2 = "Contraseña cambiada exitosamente.";
+        } else {
+            $mensaje2 = "Error al cambiar la contraseña. Intenta nuevamente.";
         }
     }
 }

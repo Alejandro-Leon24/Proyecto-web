@@ -36,11 +36,16 @@ require_once __DIR__ . '/../Controlador/AuthController.php';
         <div class="login-container">
             <h1 style="margin: 20px;">Iniciar Sesión</h1>
             <form method="post" id="login-form">
-                <label for="username" style="font-weight: bold;">Correo</label>
-                <input type="text" id="username" name="username" placeholder="correo@gmail.com" required>
+                <div class="group">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username" style="font-weight: bold;">Correo Electronico:</label>
+                </div>
+                <div></div>
+                <div class="group">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password" style="font-weight: bold;">Contraseña:</label>
+                </div>
 
-                <label for="password" style="font-weight: bold;">Contraseña</label>
-                <input type="password" id="password" name="password" placeholder="********" required>
                 <div style="display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
                     <button type="submit" name="login" class="iniciar-sesion">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"><path stroke-dasharray="48" stroke-dashoffset="48" d="M8 5v-1c0 -0.55 0.45 -1 1 -1h9c0.55 0 1 0.45 1 1v16c0 0.55 -0.45 1 -1 1h-9c-0.55 0 -1 -0.45 -1 -1v-1"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.45s" values="48;0"/></path><path stroke-dasharray="12" stroke-dashoffset="12" d="M4 12h11"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.525s" dur="0.15s" values="12;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M15 12l-3.5 -3.5M15 12l-3.5 3.5"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.675s" dur="0.15s" values="6;0"/></path></g></svg>    

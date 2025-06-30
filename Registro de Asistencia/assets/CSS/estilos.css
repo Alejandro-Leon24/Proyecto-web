@@ -384,7 +384,10 @@ td, th {
 }
 .asistencia{
   font-weight: 700;
+  font-size: 2rem;
   padding: 10px 0 10px 20px; /* Relleno interno */
+  display: inline-block;
+  margin: 10px;
 }
 input[type="radio"] {
   /* display: none; /* Oculta los botones de radio */
@@ -409,4 +412,36 @@ input[type="radio"] {
   justify-content: center;
   align-items: center;
   gap: 5px;
+}
+.group{
+  position: relative;
+  width: 100%;
+}
+
+.group input{
+  position: relative;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+  padding: 12px; /* espacio para el texto */
+}
+
+.group label{
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  background: transparent;
+  padding: 0 4px;
+  transition: 0.2s ease all; /* Transición suave para el cambio de posición y tamaño */
+  pointer-events: none; /* Desactiva eventos del puntero */
+}
+.group input:focus + label,
+.group input:valid + label {
+  top: -6px; /* Mueve la etiqueta hacia arriba */
+  font-size: 0.8rem; 
+  color: #333; /* Cambia el color de la etiqueta */
+  background: #fff; /* Fondo blanco para la etiqueta */
+  left: 5px;
 }

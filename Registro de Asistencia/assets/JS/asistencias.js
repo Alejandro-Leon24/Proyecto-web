@@ -88,7 +88,7 @@ export function initRegistroAsistencia() {
                     e.preventDefault();
                     mostrarMensajePersonalizado("⚠️ No puedes registrar asistencia porque no tienes clase en este momento.");
                 };
-                return;
+                return; 
             }
 
             // **CASO 2: HAY CLASE ACTUAL**

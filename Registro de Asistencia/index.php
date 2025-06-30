@@ -65,12 +65,19 @@ if (!isset($_SESSION['usuario']['id'])) {
         <div class="mensaje">
             <h1>Registro de asistencia</h1>
             <div>
-                <p>¿Ya asistió a la clase <span id="nombre-materia">______</span>?</p>
+                <p><span id="nombre-materia"></span></p>
             </div>
         </div>
         <form id="form-asistencia">
-            <label class="asistencia"><input type="radio" name="asistio" value="si" required> Sí</label>
-            <label class="asistencia"><input type="radio" name="asistio" value="no" required> No</label><br>
+            <label class="asistencia"><input type="radio" name="asistio" value="si" required>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="none" stroke="#006529" stroke-dasharray="24" stroke-dashoffset="24" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 11l6 6l10 -10"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.28s" values="24;0"/></path></svg>
+            Asistí
+            </label>
+
+            <label class="asistencia"><input type="radio" name="asistio" value="no" required>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="none" stroke="#dd1b1b" stroke-dasharray="12" stroke-dashoffset="12" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.21s" values="12;0"/></path></svg>
+            No asistí
+            </label><br>
             <button type="submit" class="boton-confirmar" style="font-weight: 700; font-size: 1.5rem;">Confirmar</button>
         </form>
     </main>

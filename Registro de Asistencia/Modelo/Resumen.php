@@ -1,8 +1,20 @@
 <?php
 require_once __DIR__ . '/../Config/database.php';
 
+/**
+ * Clase Resumen para obtener un resumen de asistencias por materia para un usuario.
+ */
 class Resumen
 {
+    /**
+     * Obtiene un resumen de asistencias por materia para un usuario específico.
+     *
+     * @param int $usuario_id El ID del usuario para el cual se obtendrá el resumen.
+     * @return array Un array asociativo donde cada elemento representa una materia
+     *               y contiene el ID de la materia, el nombre de la materia,
+     *               el total de clases y el número de asistencias 'si'.
+     *               Retorna un array vacío si no se encuentran datos.
+     */
     public static function obtenerResumen($usuario_id)
     {
         global $Conexion;

@@ -4,6 +4,14 @@ require_once __DIR__ . '/../Modelo/Usuario.php';
 $mensaje = "";
 $mensaje2 = "";
 
+/**
+ * Controlador para la creación de cuentas de usuario, recuperación de contraseña y cambio de contraseña.
+ *
+ * Este controlador maneja las solicitudes POST para crear una nueva cuenta,
+ * recuperar la contraseña olvidada y cambiar la contraseña existente.
+ * Realiza validaciones de los datos ingresados por el usuario y utiliza la clase Usuario
+ * para interactuar con la base de datos.
+ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['crear'])) {
     $nombre = trim($_POST['nombre'] ?? '');
     $correo = trim($_POST['correo'] ?? '');

@@ -1,6 +1,21 @@
 <?php
+
+/**
+ * Clase Materia.
+ *
+ * Esta clase proporciona métodos estáticos para interactuar con la tabla 'materias' en la base de datos.
+ * Incluye funcionalidades para obtener materias y sus horarios, verificar solapamientos de horarios,
+ * y generar mensajes informativos basados en parámetros GET.
+ */
 class Materia
 {
+    /**
+     * Obtiene todas las materias y sus horarios asociados para un usuario específico.
+     *
+     * @param int $usuario_id El ID del usuario.
+     * @return array Un array asociativo donde cada elemento representa una materia con sus horarios concatenados.
+     *               Los horarios se concatenan en un string con el formato 'dia|hora_inicio|hora_fin', separados por comas.
+     */
     public static function obtenerMateriasYHorariosPorUsuario($usuario_id)
     {
         global $Conexion;
@@ -14,6 +29,16 @@ class Materia
         $stmt->execute([$usuario_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Verifica si los horarios proporcionados para una materia se solapan con los horarios de otras materias
+     * existentes para el mismo usuario.
+     *
+     * @param int $usuario_id El ID del usuario.
+     * @param array $horariosNuevos Un array de horarios nuevos a verificar, donde cada elemento debe tener las claves 'dia', 'hora_inicio' y 'hora_fin'.
+     * @param int|null $materia_id (Opcional) El ID de la materia actual, útil para evitar la auto-comparación al editar una materia.
+     * @return bool Retorna true si existe solapamiento de horarios, false en caso contrario.
+     */
 
     public static function existeSolapamiento($usuario_id, $horariosNuevos, $materia_id = null)
     {
@@ -70,6 +95,14 @@ class Materia
         }
         return false;
     }
+
+    /**
+     * Genera un mensaje informativo basado en los parámetros GET recibidos.
+     *
+     * @param array $get El array $_GET.
+     * @return string Un mensaje informativo dependiendo de los parámetros 'ok' o 'error' en el array $_GET.
+     *                Retorna una cadena vacía si no se encuentran parámetros relevantes.
+     */
 
     public static function mensajeGET($get)
     {

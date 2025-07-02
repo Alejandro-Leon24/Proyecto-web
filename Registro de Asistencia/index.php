@@ -82,7 +82,7 @@ if (!isset($_SESSION['usuario']['id'])) {
         </form>
     </main>
 
-    <script type="module" src="assets/JS/main.js?v=<?= time() ?>&r=<?= rand() ?>&bust=1"></script>
+    <script type="module" src="assets/JS/main.js"></script>
 </body>
 
 </html>
